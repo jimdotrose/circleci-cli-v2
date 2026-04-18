@@ -22,6 +22,7 @@ var environmentHelpBody = heredoc.Doc(`
 	OUTPUT CONTROL
 	  NO_COLOR                 Disable ANSI color output. Follows no-color.org standard.
 	  CIRCLECI_NO_COLOR        CircleCI-specific alias for NO_COLOR.
+	  CIRCLECI_QUIET           Suppress all decorative output including success confirmations; data output to stdout is unaffected.
 	  CLICOLOR=0               Disable color (Heroku/BSD convention).
 	  CLICOLOR_FORCE=1         Force color even when stdout is not a TTY.
 	  TERM=dumb                Disables color (inherited from terminal emulator).
