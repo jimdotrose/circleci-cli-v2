@@ -1,0 +1,30 @@
+Follow a CircleCI project, enabling builds for new commits.
+
+The project slug format is <vcs-type>/<org>/<repo>, for example
+github/myorg/myrepo. Following a project links it to your account
+and allows the CLI to trigger pipelines for it.
+
+
+JSON Fields:
+  slug, name, organization_name, vcs_info
+
+Usage:
+  project follow <project-slug> [flags]
+
+Examples:
+# Follow a GitHub project:
+$ circleci project follow github/myorg/myrepo
+
+# Follow a Bitbucket project:
+$ circleci project follow bitbucket/myteam/myservice
+
+# Follow and output result as JSON:
+$ circleci project follow github/myorg/myrepo --json
+
+
+Flags:
+  -h, --help                help for follow
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

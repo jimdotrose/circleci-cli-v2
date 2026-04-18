@@ -1,0 +1,30 @@
+Get metadata for a project environment variable.
+
+The API never returns variable values — the value field will always
+be "xxxx". To check whether a variable is set, use this command and
+look for a successful response.
+
+
+JSON Fields:
+  name, value
+
+Usage:
+  project env get <project-slug> <name> [flags]
+
+Examples:
+# Check whether AWS_KEY is set:
+$ circleci project env get github/myorg/myrepo AWS_KEY
+
+# Get as JSON:
+$ circleci project env get github/myorg/myrepo AWS_KEY --json
+
+# Use in a script:
+$ circleci project env get github/myorg/myrepo MY_VAR && echo "is set"
+
+
+Flags:
+  -h, --help                help for get
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

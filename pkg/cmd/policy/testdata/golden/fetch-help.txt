@@ -1,0 +1,23 @@
+Fetch the currently active policy bundle for an organization.
+
+Without --policy-name, returns all policy documents in the bundle.
+With --policy-name, returns only the named document.
+
+Usage:
+  policy fetch [flags]
+
+Examples:
+# Fetch the entire active bundle:
+$ circleci policy fetch --owner-id <org-id>
+
+# Fetch a specific policy document:
+$ circleci policy fetch --owner-id <org-id> --policy-name my_policy
+
+# Save the bundle to disk:
+$ circleci policy fetch --owner-id $ORG_ID > bundle.json
+
+
+Flags:
+  -h, --help                 help for fetch
+      --owner-id string      Organization ID
+      --policy-name string   Fetch a specific policy document by name

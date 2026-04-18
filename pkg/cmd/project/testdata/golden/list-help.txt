@@ -1,0 +1,29 @@
+List all CircleCI projects the authenticated user follows.
+
+Returns the project slugs and VCS metadata for every project
+associated with the current user's token.
+
+
+JSON Fields:
+  slug, name, organization_name, vcs_info
+
+Usage:
+  project list [flags]
+
+Examples:
+# List all followed projects:
+$ circleci project list
+
+# List as JSON:
+$ circleci project list --json
+
+# Extract slugs with jq:
+$ circleci project list --jq '.[].slug'
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

@@ -152,6 +152,9 @@ func checkStatus(resp *http.Response) error {
 			"Resource not found",
 			fmt.Sprintf("The requested resource does not exist. %s", msg),
 			cierrors.ExitNotFound,
+		).WithSuggestions(
+			"Use a list command to see available resources (e.g. 'circleci context list')",
+			"Check that the ID or slug is correct",
 		)
 
 	default:

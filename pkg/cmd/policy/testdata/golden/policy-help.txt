@@ -1,0 +1,25 @@
+Commands for managing CircleCI config policies.
+
+Config policies use Open Policy Agent (OPA) Rego rules to enforce
+organizational standards on pipeline configuration. Push a policy
+bundle, view decision logs, and evaluate configs locally.
+
+Usage:
+  policy [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  decide      Evaluate a config against the active policy bundle
+  diff        Preview changes before pushing a policy bundle
+  eval        Evaluate a config against a local policy bundle
+  fetch       Fetch the active policy bundle
+  help        Help about any command
+  logs        List policy decision logs
+  push        Push a policy bundle to CircleCI
+  settings    Get or set policy enforcement settings
+  test        Run OPA tests against a policy bundle
+
+Flags:
+  -h, --help   help for policy
+
+Use "policy [command] --help" for more information about a command.

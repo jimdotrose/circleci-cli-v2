@@ -1,0 +1,22 @@
+Delete a CircleCI project environment variable.
+
+This action is irreversible. Use --force to skip the confirmation
+prompt in non-interactive mode.
+
+Usage:
+  project env delete <project-slug> <name> [flags]
+
+Examples:
+# Delete a variable (prompts for confirmation):
+$ circleci project env delete github/myorg/myrepo OLD_KEY
+
+# Delete without prompting:
+$ circleci project env delete github/myorg/myrepo OLD_KEY --force
+
+# Delete in a CI script:
+$ circleci project env delete github/myorg/myrepo OLD_KEY --force --no-prompt
+
+
+Flags:
+  -f, --force   Skip confirmation prompt
+  -h, --help    help for delete

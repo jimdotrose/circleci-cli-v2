@@ -1,0 +1,25 @@
+Create or update a CircleCI project environment variable.
+
+The variable is available in all subsequent pipeline runs for the
+project. Existing values are overwritten silently.
+
+Provide the value with --value. Pass --value - to read the value
+from stdin, which avoids shell history exposure for sensitive values.
+
+Usage:
+  project env set <project-slug> <name> [flags]
+
+Examples:
+# Set an environment variable:
+$ circleci project env set github/myorg/myrepo AWS_KEY --value AKIAIOSFODNN7
+
+# Read value from stdin (avoids shell history exposure):
+$ echo "$MY_SECRET" | circleci project env set github/myorg/myrepo MY_SECRET --value -
+
+# Set from a shell variable:
+$ circleci project env set github/myorg/myrepo DB_URL --value "$DB_URL"
+
+
+Flags:
+  -h, --help           help for set
+      --value string   Variable value (use - to read from stdin)

@@ -1,0 +1,32 @@
+List all registered self-hosted runner agent instances for a
+resource class.
+
+Shows hostname, version, last connection time, and last-used time
+for each agent. Use --json to get full metadata.
+
+
+JSON Fields:
+  resource_class, hostname, name, first_connected, last_connected, last_used, version, ip
+
+Usage:
+  runner instance list [flags]
+
+Examples:
+# List instances for a resource class:
+$ circleci runner instance list --resource-class myorg/my-runner
+
+# List as JSON:
+$ circleci runner instance list --resource-class myorg/my-runner --json
+
+# Find stale instances:
+$ circleci runner instance list --resource-class myorg/my-runner \
+    --jq '[.[] | select(.last_used < "2024-01-01")]'
+
+
+Flags:
+  -h, --help                    help for list
+      --jq expression           Filter JSON output with a jq expression
+  -j, --json                    Output as JSON
+      --plain                   Plain text output (tab-separated, no color)
+      --resource-class string   Resource class to list instances for
+      --template template       Format output using a Go template

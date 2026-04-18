@@ -1,0 +1,18 @@
+Commands for managing self-hosted runner resource classes.
+
+Resource classes define the type of runner that executes jobs.
+They are namespaced under your organization and referenced in
+your config.yml executor definition.
+
+Usage:
+  runner resource-class [command]
+
+Available Commands:
+  create      Create a runner resource class
+  delete      Delete a runner resource class
+  list        List runner resource classes
+
+Flags:
+  -h, --help   help for resource-class
+
+Use "runner resource-class [command] --help" for more information about a command.

@@ -1,0 +1,25 @@
+Upload a directory of OPA Rego policy files to CircleCI as the
+active policy bundle for an organization.
+
+All .rego files in <bundle-dir> are uploaded. The policy bundle
+immediately becomes active for all new pipeline evaluations.
+Use --dry-run (via 'policy diff') to preview changes first.
+
+Usage:
+  policy push <bundle-dir> [flags]
+
+Examples:
+# Push a policy bundle:
+$ circleci policy push ./policies --owner-id <org-id>
+
+# Push from a CI script:
+$ circleci policy push ./policies --owner-id $ORG_ID --no-prompt
+
+# Preview changes before pushing:
+$ circleci policy diff ./policies --owner-id $ORG_ID
+
+
+Flags:
+  -h, --help              help for push
+      --no-prompt         Skip confirmation prompt
+      --owner-id string   Organization ID

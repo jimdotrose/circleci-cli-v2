@@ -1,0 +1,31 @@
+List self-hosted runner resource classes for a namespace.
+
+Use --namespace to filter to a specific organization namespace.
+Without --namespace, all resource classes visible to the token
+are returned.
+
+
+JSON Fields:
+  resource_class, description
+
+Usage:
+  runner resource-class list [flags]
+
+Examples:
+# List resource classes for a namespace:
+$ circleci runner resource-class list --namespace myorg
+
+# List as JSON:
+$ circleci runner resource-class list --namespace myorg --json
+
+# Also available as a top-level alias:
+$ circleci resource-class list --namespace myorg
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --namespace string    Namespace to filter resource classes
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

@@ -1,0 +1,26 @@
+Evaluate a CircleCI config file against a local OPA bundle file
+without making an API call. Useful for testing policy changes
+before pushing.
+
+Usage:
+  policy eval <config-file> [flags]
+
+Examples:
+# Evaluate against a local bundle:
+$ circleci policy eval .circleci/config.yml \
+    --owner-id <org-id> --bundle ./policies/bundle.tar.gz
+
+# Use in a pre-commit hook:
+$ circleci policy eval .circleci/config.yml \
+    --owner-id $ORG_ID --bundle ./policies/bundle.tar.gz
+
+# Combine with policy test in CI:
+$ circleci policy test --owner-id $ORG_ID ./policies && \
+    circleci policy eval .circleci/config.yml --owner-id $ORG_ID \
+    --bundle ./policies/bundle.tar.gz
+
+
+Flags:
+      --bundle string     Path to local policy bundle file
+  -h, --help              help for eval
+      --owner-id string   Organization ID

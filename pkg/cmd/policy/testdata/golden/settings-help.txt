@@ -1,0 +1,26 @@
+Get or update the policy enforcement settings for an organization.
+
+Without --enabled, shows the current settings.
+With --enabled true|false, updates the enforcement state.
+
+When enabled=true, all pipelines must pass the active policy bundle
+or they will be blocked from running.
+
+Usage:
+  policy settings [flags]
+
+Examples:
+# Show current settings:
+$ circleci policy settings --owner-id <org-id>
+
+# Enable policy enforcement:
+$ circleci policy settings --owner-id <org-id> --enabled true
+
+# Disable policy enforcement:
+$ circleci policy settings --owner-id <org-id> --enabled false
+
+
+Flags:
+      --enabled string    Set enforcement: true or false
+  -h, --help              help for settings
+      --owner-id string   Organization ID

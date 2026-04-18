@@ -103,3 +103,109 @@ type Artifact struct {
 	NodeIndex  int    `json:"node_index"`
 	URL        string `json:"url"`
 }
+
+// ── Project ───────────────────────────────────────────────────────────────────
+
+// Project represents a CircleCI project.
+type Project struct {
+	Slug             string    `json:"slug"`
+	Name             string    `json:"name"`
+	OrganizationName string    `json:"organization_name"`
+	VCSInfo          ProjectVCS `json:"vcs_info"`
+}
+
+// ProjectVCS holds VCS metadata for a project.
+type ProjectVCS struct {
+	VCSUrl        string `json:"vcs_url"`
+	Provider      string `json:"provider"`
+	DefaultBranch string `json:"default_branch"`
+}
+
+// EnvVar represents a project-level environment variable (value redacted by API).
+type EnvVar struct {
+	Name  string `json:"name"`
+	Value string `json:"value"` // always "xxxx" — API never returns real values
+}
+
+// ── Runner ────────────────────────────────────────────────────────────────────
+
+// RunnerResourceClass represents a self-hosted runner resource class.
+type RunnerResourceClass struct {
+	ResourceClass string `json:"resource_class"`
+	Description   string `json:"description"`
+}
+
+// RunnerToken represents an authentication token for a runner resource class.
+type RunnerToken struct {
+	ID            string    `json:"id"`
+	ResourceClass string    `json:"resource_class"`
+	Nickname      string    `json:"nickname"`
+	CreatedAt     time.Time `json:"created_at"`
+	Token         string    `json:"token,omitempty"` // only present at creation time
+}
+
+// RunnerInstance represents a registered self-hosted runner agent.
+type RunnerInstance struct {
+	ResourceClass  string    `json:"resource_class"`
+	Hostname       string    `json:"hostname"`
+	Name           string    `json:"name"`
+	FirstConnected time.Time `json:"first_connected"`
+	LastConnected  time.Time `json:"last_connected"`
+	LastUsed       time.Time `json:"last_used"`
+	Version        string    `json:"version"`
+	IP             string    `json:"ip"`
+}
+
+// ── Policy ────────────────────────────────────────────────────────────────────
+
+// PolicyDecision is the result of evaluating a policy bundle against config.
+type PolicyDecision struct {
+	Status        string              `json:"status"`
+	EnabledRules  []string            `json:"enabled_rules"`
+	HardFailures  []PolicyViolation   `json:"hard_failures"`
+	SoftFailures  []PolicyViolation   `json:"soft_failures"`
+	Reason        string              `json:"reason,omitempty"`
+}
+
+// PolicyViolation describes a single policy rule failure.
+type PolicyViolation struct {
+	Rule   string `json:"rule"`
+	Reason string `json:"reason"`
+}
+
+// PolicyLog represents a historical policy evaluation event.
+type PolicyLog struct {
+	ID          string          `json:"id"`
+	CreatedAt   time.Time       `json:"created_at"`
+	Decision    PolicyDecision  `json:"decision"`
+	Metadata    interface{}     `json:"metadata"`
+}
+
+// PolicySettings holds the policy evaluation settings for an organization.
+type PolicySettings struct {
+	Enabled bool `json:"enabled"`
+}
+
+// ── Trigger ───────────────────────────────────────────────────────────────────
+
+// ScheduledTrigger represents a scheduled pipeline trigger.
+type ScheduledTrigger struct {
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	ProjectSlug string      `json:"project_slug"`
+	CreatedAt   time.Time   `json:"created_at"`
+	UpdatedAt   time.Time   `json:"updated_at"`
+	Timetable   interface{} `json:"timetable"`
+	Actor       struct {
+		ID    string `json:"id"`
+		Login string `json:"login"`
+	} `json:"actor"`
+}
+
+// ── Namespace ─────────────────────────────────────────────────────────────────
+
+// Namespace represents a CircleCI orb namespace.
+type Namespace struct {
+	Name string `json:"name"`
+}

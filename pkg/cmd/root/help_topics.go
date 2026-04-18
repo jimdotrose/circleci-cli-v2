@@ -150,3 +150,53 @@ var formattingHelpBody = heredoc.Doc(`
 	When --json is active, all human-readable output is suppressed from stdout.
 	Progress messages continue on stderr in non-CI mode.
 `)
+
+// ── circleci help api ─────────────────────────────────────────────────────────
+
+const apiHelpTitle = "Raw API access with 'circleci api'"
+
+var apiHelpBody = heredoc.Doc(`
+	RAW API ACCESS
+
+	The 'circleci api' command lets you call any CircleCI API v2 endpoint
+	directly. Authentication (Circle-Token) and base URL are applied automatically.
+
+	USAGE
+
+	  circleci api <endpoint> [flags]
+
+	  The endpoint must start with / and is relative to /api/v2.
+
+	EXAMPLES
+
+	  # Get the authenticated user:
+	  $ circleci api /me
+
+	  # List pipelines (all pages):
+	  $ circleci api /project/gh/myorg/myrepo/pipeline --paginate
+
+	  # Create a context via POST:
+	  $ circleci api /context --method POST \
+	      --field name=my-ctx \
+	      --field owner.id=$ORG_ID \
+	      --field owner.type=organization
+
+	  # Filter output with jq:
+	  $ circleci api /project/gh/myorg/myrepo/pipeline --jq '.items[].id'
+
+	  # Add custom headers:
+	  $ circleci api /me --header 'Accept: application/json'
+
+	FLAGS
+
+	  -X, --method      HTTP method (default: GET, or POST when --field is used)
+	  -F, --field       Request body field: key=value (repeatable; supports nested keys: owner.id)
+	  -H, --header      Additional HTTP header: 'Name: value' (repeatable)
+	      --paginate    Follow next_page_token and collect all pages into one array
+	      --jq          Filter response with a jq expression
+
+	NOTES
+
+	  Use 'circleci api --help' for the full flag reference.
+	  All errors follow standard circleci exit codes (see: circleci help exit-codes).
+`)

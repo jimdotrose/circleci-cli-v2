@@ -2,20 +2,25 @@ package root
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
 
-	"os"
-
+	cmdapi "github.com/CircleCI-Public/circleci-cli/pkg/cmd/api"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/auth"
 	cmdconfig "github.com/CircleCI-Public/circleci-cli/pkg/cmd/config"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/context"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/diagnostic"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/job"
+	cmdnamespace "github.com/CircleCI-Public/circleci-cli/pkg/cmd/namespace"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/pipeline"
+	cmdpolicy "github.com/CircleCI-Public/circleci-cli/pkg/cmd/policy"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/project"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/runner"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/settings"
 	cmdtelemetry "github.com/CircleCI-Public/circleci-cli/pkg/cmd/telemetry"
+	cmdtrigger "github.com/CircleCI-Public/circleci-cli/pkg/cmd/trigger"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/version"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/workflow"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
@@ -61,6 +66,10 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 			  circleci help environment    All supported environment variables
 			  circleci help exit-codes     Documented exit codes
 			  circleci help formatting     --json, --jq, and --template usage
+			  circleci help api            Raw API access with 'circleci api'
+
+			Report bugs and request features:
+			  https://github.com/CircleCI-Public/circleci-cli/issues
 		`),
 		SilenceUsage:  true,
 		SilenceErrors: true,
@@ -118,6 +127,18 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	jobCmd.GroupID = "core"
 	cmd.AddCommand(jobCmd)
 
+	projectCmd := project.NewCmdProject(f)
+	projectCmd.GroupID = "core"
+	cmd.AddCommand(projectCmd)
+
+	runnerCmd := runner.NewCmdRunner(f)
+	runnerCmd.GroupID = "core"
+	cmd.AddCommand(runnerCmd)
+
+	policyCmd := cmdpolicy.NewCmdPolicy(f)
+	policyCmd.GroupID = "developer"
+	cmd.AddCommand(policyCmd)
+
 	telemetryCmd := cmdtelemetry.NewCmdTelemetry(f)
 	telemetryCmd.GroupID = "developer"
 	cmd.AddCommand(telemetryCmd)
@@ -134,6 +155,18 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	versionCmd.GroupID = "developer"
 	cmd.AddCommand(versionCmd)
 
+	apiCmd := cmdapi.NewCmdAPI(f)
+	apiCmd.GroupID = "developer"
+	cmd.AddCommand(apiCmd)
+
+	triggerCmd := cmdtrigger.NewCmdTrigger(f)
+	triggerCmd.GroupID = "core"
+	cmd.AddCommand(triggerCmd)
+
+	namespaceCmd := cmdnamespace.NewCmdNamespace(f)
+	namespaceCmd.GroupID = "developer"
+	cmd.AddCommand(namespaceCmd)
+
 	// --version / -v flag at root level.
 	cmd.Version = buildVersion
 	cmd.InitDefaultVersionFlag()
@@ -141,10 +174,58 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	// Shell completion (bash/zsh/fish/powershell).
 	cmd.InitDefaultCompletionCmd()
 
+	// ── context set-secret alias: 2-level path for 3-level context secret set ──
+	// context secret set is 3 levels deep; expose set-secret at 2 levels.
+	contextCmd.AddCommand(&cobra.Command{
+		Use:   "set-secret <context-id> <variable-name>",
+		Short: "Alias for: circleci context secret set",
+		Long: heredoc.Doc(`
+			Alias for 'circleci context secret set'.
+
+			Create or update an environment variable in a CircleCI context.
+			The value is read from stdin (masked when interactive).
+		`),
+		Example: heredoc.Doc(`
+			# Set a variable interactively:
+			$ circleci context set-secret <context-id> MY_VAR
+
+			# Set from stdin:
+			$ echo "$SECRET" | circleci context set-secret <context-id> MY_VAR
+
+			# Canonical form (same behavior):
+			$ circleci context secret set <context-id> MY_VAR
+		`),
+		Hidden: true,
+		Args:   cobra.ExactArgs(2),
+		RunE:   context.NewCmdSecretSet(f).RunE,
+	})
+
+	// ── Deprecation shims ─────────────────────────────────────────────────────
+	// context store-secret → context secret set
+	contextCmd.AddCommand(&cobra.Command{
+		Use:        "store-secret",
+		Short:      "[deprecated] use: circleci context secret set",
+		Hidden:     true,
+		Deprecated: "use 'circleci context secret set' instead",
+		Run:        func(cmd *cobra.Command, args []string) {},
+	})
+	// project environment-variable → project env
+	projectCmd.AddCommand(&cobra.Command{
+		Use:        "environment-variable",
+		Short:      "[deprecated] use: circleci project env",
+		Hidden:     true,
+		Deprecated: "use 'circleci project env' instead",
+		Run:        func(cmd *cobra.Command, args []string) {},
+	})
+
+	// ── Top-level alias: circleci resource-class → circleci runner resource-class ──
+	cmd.AddCommand(newResourceClassAlias(f))
+
 	// ── Help topics ───────────────────────────────────────────────────────────
 	cmd.AddCommand(newHelpTopicCmd("environment", environmentHelpTitle, environmentHelpBody))
 	cmd.AddCommand(newHelpTopicCmd("exit-codes", exitCodesHelpTitle, exitCodesHelpBody))
 	cmd.AddCommand(newHelpTopicCmd("formatting", formattingHelpTitle, formattingHelpBody))
+	cmd.AddCommand(newHelpTopicCmd("api", apiHelpTitle, apiHelpBody))
 
 	return cmd
 }
@@ -162,3 +243,39 @@ func newHelpTopicCmd(name, title, body string) *cobra.Command {
 		},
 	}
 }
+
+// newResourceClassAlias returns a hidden top-level `resource-class` command
+// that delegates to `runner resource-class`. Satisfies:
+//
+//	circleci resource-class list --namespace myorg
+func newResourceClassAlias(f *cmdutil.Factory) *cobra.Command {
+	runnerCmd := runner.NewCmdRunner(f)
+
+	// Find the resource-class sub-command from the runner group.
+	var rcCmd *cobra.Command
+	for _, sub := range runnerCmd.Commands() {
+		if sub.Use == "resource-class <command>" {
+			rcCmd = sub
+			break
+		}
+	}
+	if rcCmd == nil {
+		// Fallback — shouldn't happen.
+		return &cobra.Command{
+			Use:    "resource-class",
+			Hidden: true,
+		}
+	}
+
+	rcCmd.Use = "resource-class <command>"
+	rcCmd.Short = "Alias for: circleci runner resource-class"
+	rcCmd.Long = heredoc.Doc(`
+		Alias for 'circleci runner resource-class'.
+
+		Manage self-hosted runner resource classes. This top-level alias exists
+		for convenience; the canonical path is 'circleci runner resource-class'.
+	`)
+	rcCmd.Hidden = true
+	return rcCmd
+}
+
