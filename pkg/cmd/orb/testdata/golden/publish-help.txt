@@ -1,0 +1,26 @@
+Publish a new version of an orb from a YAML source file.
+
+Provide the orb reference with --ref in the format namespace/name@version,
+where version is a semantic version (1.2.3) or a dev label (dev:my-feature).
+Dev versions can be promoted to stable releases with 'circleci orb promote'.
+
+Use --dry-run to preview the publish operation without calling the API.
+
+Usage:
+  orb publish <file> [flags]
+
+Examples:
+# Publish a stable semantic version:
+$ circleci orb publish orb.yml --ref myorg/myorb@1.2.0
+
+# Publish a dev version for testing:
+$ circleci orb publish orb.yml --ref myorg/myorb@dev:my-feature
+
+# Preview without publishing:
+$ circleci orb publish orb.yml --ref myorg/myorb@1.2.0 --dry-run
+
+
+Flags:
+  -n, --dry-run      Preview without publishing
+  -h, --help         help for publish
+      --ref string   Orb reference: namespace/name@version (required)

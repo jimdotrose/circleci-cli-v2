@@ -1,0 +1,32 @@
+Search the CircleCI Orb Registry for orbs matching a query string.
+
+Returns orbs whose name or description matches the query.
+Use --json for machine-readable output suitable for scripting.
+
+
+JSON Fields:
+  id, name, namespace, is_private, statistics, versions
+
+Usage:
+  orb search <query> [flags]
+
+Examples:
+# Search for node-related orbs:
+$ circleci orb search node
+
+# Search and output as JSON:
+$ circleci orb search aws --json
+
+# Extract just the orb names:
+$ circleci orb search docker --json --jq '.[].name'
+
+# Count results:
+$ circleci orb search python --json | jq length
+
+
+Flags:
+  -h, --help                help for search
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template
