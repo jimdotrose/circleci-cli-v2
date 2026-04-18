@@ -42,7 +42,7 @@ func New() *Factory {
 		if cachedCfg != nil {
 			return cachedCfg, nil
 		}
-		cfg, err := config.Load(config.DefaultPath())
+		cfg, err := config.LoadWithKeychain(config.DefaultPath())
 		if err != nil {
 			// Return defaults so the CLI remains usable with a broken config file.
 			cachedCfg = config.NewMockConfig()

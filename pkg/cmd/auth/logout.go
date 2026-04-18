@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	"github.com/CircleCI-Public/circleci-cli/pkg/config"
 	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 )
 
@@ -18,7 +19,7 @@ func NewCmdLogout(f *cmdutil.Factory) *cobra.Command {
 		Use:   "logout",
 		Short: "Remove the stored API token",
 		Long: heredoc.Doc(`
-			Remove the stored API token from ~/.circleci/cli.yml.
+			Remove the stored API token from the OS keychain or ~/.circleci/cli.yml.
 
 			After logout, commands that require authentication will fail until you
 			run 'circleci auth login' again. In interactive mode a confirmation
@@ -58,6 +59,8 @@ func NewCmdLogout(f *cmdutil.Factory) *cobra.Command {
 				}
 			}
 
+			backend := config.TokenBackend(cfg)
+
 			if err := cfg.Set("token", ""); err != nil {
 				return err
 			}
@@ -66,7 +69,12 @@ func NewCmdLogout(f *cmdutil.Factory) *cobra.Command {
 					err.Error(), cierrors.ExitGeneralError)
 			}
 
-			fmt.Fprintf(ios.Out, "✓ Logged out of %s\n", cfg.Host())
+			switch backend {
+			case "keychain":
+				fmt.Fprintf(ios.Out, "✓ Token removed from system keychain (%s)\n", cfg.Host())
+			default:
+				fmt.Fprintf(ios.Out, "✓ Logged out of %s\n", cfg.Host())
+			}
 			return nil
 		},
 	}

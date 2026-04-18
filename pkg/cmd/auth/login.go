@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	"github.com/CircleCI-Public/circleci-cli/pkg/config"
 	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 )
 
@@ -23,9 +24,12 @@ func NewCmdLogin(f *cmdutil.Factory) *cobra.Command {
 		Long: heredoc.Doc(`
 			Store a CircleCI personal API token for use by the CLI.
 
-			The token is saved to ~/.circleci/cli.yml and used for all subsequent
-			commands that require authentication. To authenticate with a CircleCI
-			Server instance, set the host with:
+			The token is saved to the OS keychain (macOS Keychain, Windows Credential
+			Manager, or Linux Secret Service) when available, falling back to
+			~/.circleci/cli.yml when no keychain daemon is running. Tokens stored in
+			the keychain are never written to disk in plaintext.
+
+			To authenticate with a CircleCI Server instance, set the host first:
 
 			  circleci settings set host https://circleci.mycompany.com
 
@@ -111,7 +115,12 @@ func NewCmdLogin(f *cmdutil.Factory) *cobra.Command {
 			}
 
 			if !ios.Quiet {
-				fmt.Fprintf(ios.Out, "✓ Token stored to %s\n", cfg.Path())
+				switch config.TokenBackend(cfg) {
+				case "keychain":
+					fmt.Fprintln(ios.Out, "✓ Token stored in system keychain")
+				default:
+					fmt.Fprintf(ios.Out, "✓ Token stored to %s\n", cfg.Path())
+				}
 			}
 			return nil
 		},
