@@ -22,7 +22,7 @@ func newTestFactory(ios *iostreams.IOStreams) *cmdutil.Factory {
 func TestRootHelp(t *testing.T) {
 	ios, _, out, _ := iostreams.Test()
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	cmd.SetOut(out)
 	cmd.SetErr(&bytes.Buffer{})
 	cmd.SetArgs([]string{"--help"})
@@ -43,7 +43,7 @@ func TestRootHelp_NoANSI(t *testing.T) {
 	}
 
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	var out bytes.Buffer
 	cmd.SetOut(&out)
 	cmd.SetErr(&bytes.Buffer{})
@@ -69,7 +69,7 @@ func TestRootHelp_CIMode(t *testing.T) {
 	}
 
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	var out bytes.Buffer
 	cmd.SetOut(&out)
 	cmd.SetErr(&bytes.Buffer{})
@@ -85,7 +85,7 @@ func TestRootHelp_CIMode(t *testing.T) {
 func TestHelpTopic_ExitCodes(t *testing.T) {
 	ios, _, out, _ := iostreams.Test()
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	cmd.SetOut(out)
 	cmd.SetErr(&bytes.Buffer{})
 	cmd.SetArgs([]string{"help", "exit-codes"})
@@ -102,7 +102,7 @@ func TestHelpTopic_ExitCodes(t *testing.T) {
 func TestHelpTopic_Environment(t *testing.T) {
 	ios, _, out, _ := iostreams.Test()
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	cmd.SetOut(out)
 	cmd.SetErr(&bytes.Buffer{})
 	cmd.SetArgs([]string{"help", "environment"})
@@ -121,7 +121,7 @@ func TestNoColorFlag(t *testing.T) {
 	ios.ColorEnabled = true  // start enabled
 	ios.SpinnerEnabled = true
 	f := newTestFactory(ios)
-	cmd := root.NewCmdRoot(f)
+	cmd := root.NewCmdRoot(f, "test")
 	cmd.SetOut(&bytes.Buffer{})
 	cmd.SetErr(&bytes.Buffer{})
 	cmd.SetArgs([]string{"--no-color", "--help"})

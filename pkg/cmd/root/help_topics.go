@@ -92,3 +92,61 @@ var exitCodesHelpBody = heredoc.Doc(`
 	  [ $STATUS -eq 5 ] && echo "Pipeline not found"
 	  [ $STATUS -eq 3 ] && echo "Authenticate first: circleci auth login"
 `)
+
+// ── circleci help formatting ──────────────────────────────────────────────────
+
+const formattingHelpTitle = "Output formatting: --json, --jq, and --template"
+
+var formattingHelpBody = heredoc.Doc(`
+	OUTPUT FORMATTING
+
+	Every data-returning command supports three machine-readable output modes
+	via flags. Use them to integrate circleci output with scripts and other tools.
+
+	--json
+	  Output the full response as pretty-printed JSON.
+
+	    $ circleci pipeline list --json
+	    $ circleci context list --json
+
+	--jq <expression>
+	  Filter the JSON output with a jq expression. --jq implies --json.
+	  Uses the same syntax as the standalone jq tool.
+
+	  Get a single field:
+	    $ circleci pipeline list --jq '.[0].id'
+
+	  Filter by condition:
+	    $ circleci pipeline list --jq '.[] | select(.state=="failed") | .id'
+
+	  Count items:
+	    $ circleci pipeline list --jq 'length'
+
+	  Extract a nested field:
+	    $ circleci pipeline list --jq '.[] | {id, branch: .vcsRevision}'
+
+	--template <go-template>
+	  Format output using a Go text/template string. --template implies --json.
+
+	    $ circleci pipeline list --template '{{range .}}{{.id}}\t{{.state}}\n{{end}}'
+
+	JSON FIELDS
+	  Every JSON-capable command lists its available fields at the bottom of its
+	  --help output under "JSON Fields:". Use these names in --jq and --template
+	  expressions.
+
+	    $ circleci pipeline list --help
+	    ...
+	    JSON Fields:
+	      id, projectSlug, state, createdAt, branch, number, vcsRevision
+
+	OUTPUT MODE PRECEDENCE
+	  --json → emit full JSON array/object
+	  --jq   → implies --json, then filter with jq expression
+	  --template → implies --json, then render with Go template
+	  --plain → no color, tab-separated columns
+	  (default) → human-formatted tables with color
+
+	When --json is active, all human-readable output is suppressed from stdout.
+	Progress messages continue on stderr in non-CI mode.
+`)

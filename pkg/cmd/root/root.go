@@ -6,12 +6,16 @@ import (
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
 
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/auth"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/diagnostic"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/settings"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/version"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
 )
 
-// NewCmdRoot builds the root cobra.Command with all global flags wired to the
-// Factory's IOStreams and a structured help layout.
-func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
+// NewCmdRoot builds the root cobra.Command with all global flags, command
+// groups, help topics, and subcommands wired to the provided Factory.
+func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	// applyGlobalFlags reads persistent flag values and propagates them to
 	// IOStreams. Called from both PersistentPreRunE (normal execution) and the
 	// custom HelpFunc — Cobra short-circuits PersistentPreRunE when --help is
@@ -23,6 +27,11 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 		if np, err := c.Root().PersistentFlags().GetBool("no-prompt"); err == nil && np {
 			f.IOStreams.SetInteractive(false)
 		}
+		// --host flag overrides config + env var when explicitly set.
+		if c.Root().PersistentFlags().Changed("host") {
+			host, _ := c.Root().PersistentFlags().GetString("host")
+			f.BaseURL = func() string { return host }
+		}
 	}
 
 	cmd := &cobra.Command{
@@ -31,29 +40,27 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 		Long: heredoc.Doc(`
 			Work with CircleCI from the command line.
 
-			Run 'circleci --help' to see available commands.
+			Run 'circleci <command> --help' for usage of a specific command.
 			Run 'circleci help <topic>' for detailed help on a topic:
 
 			  circleci help environment    All supported environment variables
 			  circleci help exit-codes     Documented exit codes
+			  circleci help formatting     --json, --jq, and --template usage
 		`),
-		// SilenceUsage suppresses the usage block on errors — Cobra's default
-		// behavior is to print the full usage on any error, which is noisy and
-		// unhelpful for most errors. Commands that need usage hints can call
-		// cmd.Usage() explicitly.
-		SilenceUsage: true,
-		// SilenceErrors lets main.go control error formatting via IOStreams.
+		SilenceUsage:  true,
 		SilenceErrors: true,
-		// PersistentPreRunE propagates global flag side-effects to every subcommand.
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			applyGlobalFlags(cmd)
 			return nil
 		},
 	}
 
+	// ── Command groups ────────────────────────────────────────────────────────
+	cmd.AddGroup(&cobra.Group{ID: "core", Title: "Core Commands:"})
+	cmd.AddGroup(&cobra.Group{ID: "developer", Title: "Developer Tools:"})
+
 	// ── Global flags ──────────────────────────────────────────────────────────
 	pf := cmd.PersistentFlags()
-
 	pf.StringP("token", "T", "", "CircleCI API token (env: CIRCLECI_TOKEN)")
 	pf.String("host", "https://circleci.com", "CircleCI host (env: CIRCLECI_HOST)")
 	pf.BoolP("debug", "d", false, "Enable HTTP debug logging (env: CIRCLECI_DEBUG)")
@@ -62,22 +69,46 @@ func NewCmdRoot(f *cmdutil.Factory) *cobra.Command {
 	pf.Bool("no-prompt", false, "Disable interactive prompts (env: CIRCLECI_NO_INTERACTIVE, CI)")
 
 	// ── Override help to apply global flags before rendering ──────────────────
-	// Cobra calls the HelpFunc directly for --help, bypassing PersistentPreRunE.
 	origHelp := cmd.HelpFunc()
 	cmd.SetHelpFunc(func(helpCmd *cobra.Command, args []string) {
 		applyGlobalFlags(helpCmd)
 		origHelp(helpCmd, args)
 	})
 
+	// ── Subcommands ───────────────────────────────────────────────────────────
+	authCmd := auth.NewCmdAuth(f)
+	authCmd.GroupID = "core"
+	cmd.AddCommand(authCmd)
+
+	settingsCmd := settings.NewCmdSettings(f)
+	settingsCmd.GroupID = "developer"
+	cmd.AddCommand(settingsCmd)
+
+	diagCmd := diagnostic.NewCmdDiagnostic(f)
+	diagCmd.GroupID = "developer"
+	cmd.AddCommand(diagCmd)
+
+	versionCmd := version.NewCmdVersion(f, buildVersion)
+	versionCmd.GroupID = "developer"
+	cmd.AddCommand(versionCmd)
+
+	// --version / -v flag at root level.
+	cmd.Version = buildVersion
+	cmd.InitDefaultVersionFlag()
+
+	// Shell completion (bash/zsh/fish/powershell).
+	cmd.InitDefaultCompletionCmd()
+
 	// ── Help topics ───────────────────────────────────────────────────────────
 	cmd.AddCommand(newHelpTopicCmd("environment", environmentHelpTitle, environmentHelpBody))
 	cmd.AddCommand(newHelpTopicCmd("exit-codes", exitCodesHelpTitle, exitCodesHelpBody))
+	cmd.AddCommand(newHelpTopicCmd("formatting", formattingHelpTitle, formattingHelpBody))
 
 	return cmd
 }
 
-// newHelpTopicCmd returns a hidden cobra.Command that renders a help topic
-// when the user runs `circleci help <topic>`.
+// newHelpTopicCmd returns a hidden cobra.Command that prints its Long text when
+// the user runs `circleci help <topic>`.
 func newHelpTopicCmd(name, title, body string) *cobra.Command {
 	return &cobra.Command{
 		Use:    name,

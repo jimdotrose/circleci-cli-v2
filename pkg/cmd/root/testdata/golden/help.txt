@@ -1,15 +1,24 @@
 Work with CircleCI from the command line.
 
-Run 'circleci --help' to see available commands.
+Run 'circleci <command> --help' for usage of a specific command.
 Run 'circleci help <topic>' for detailed help on a topic:
 
   circleci help environment    All supported environment variables
   circleci help exit-codes     Documented exit codes
+  circleci help formatting     --json, --jq, and --template usage
 
 Usage:
   circleci [command]
 
-Available Commands:
+Core Commands:
+  auth        Authenticate with CircleCI
+
+Developer Tools:
+  diagnostic  Check configuration and API connectivity
+  settings    Manage CLI configuration settings
+  version     Print the circleci CLI version
+
+Additional Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
 
@@ -21,5 +30,6 @@ Flags:
       --no-prompt      Disable interactive prompts (env: CIRCLECI_NO_INTERACTIVE, CI)
   -q, --quiet          Suppress progress and informational output
   -T, --token string   CircleCI API token (env: CIRCLECI_TOKEN)
+  -v, --version        version for circleci
 
 Use "circleci [command] --help" for more information about a command.

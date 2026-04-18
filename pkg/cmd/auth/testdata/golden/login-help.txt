@@ -1,0 +1,33 @@
+Store a CircleCI personal API token for use by the CLI.
+
+The token is saved to ~/.circleci/cli.yml and used for all subsequent
+commands that require authentication. To authenticate with a CircleCI
+Server instance, set the host with:
+
+  circleci settings set host https://circleci.mycompany.com
+
+In non-interactive mode (CI=true or --no-prompt), the token must be
+provided via the CIRCLECI_TOKEN environment variable or piped to stdin
+with --with-token. The command exits with code 3 if no token is found.
+
+Usage:
+  auth login [flags]
+
+Examples:
+# Interactive login (prompts for token with masked input):
+$ circleci auth login
+
+# Non-interactive login via environment variable:
+$ CIRCLECI_TOKEN=mytoken circleci auth login --no-prompt
+
+# Pipe a token from stdin:
+$ echo "$MY_TOKEN" | circleci auth login --with-token
+
+# Log in to a CircleCI Server instance:
+$ circleci settings set host https://circleci.mycompany.com
+$ circleci auth login
+
+
+Flags:
+  -h, --help         help for login
+      --with-token   Read token from stdin

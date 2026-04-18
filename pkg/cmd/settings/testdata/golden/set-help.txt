@@ -1,0 +1,26 @@
+Set a CLI configuration setting and persist it to ~/.circleci/cli.yml.
+
+Changes take effect immediately for subsequent commands. Environment
+variables (CIRCLECI_TOKEN, CIRCLECI_HOST) always take precedence over
+file values regardless of what 'settings set' writes.
+
+Available settings: host, token, update_check, telemetry
+
+To manage API tokens interactively, prefer 'circleci auth login'.
+
+Usage:
+  settings set <key> <value> [flags]
+
+Examples:
+# Point the CLI at a CircleCI Server instance:
+$ circleci settings set host https://circleci.mycompany.com
+
+# Disable telemetry:
+$ circleci settings set telemetry false
+
+# Disable update notifications:
+$ circleci settings set update_check false
+
+
+Flags:
+  -h, --help   help for set
