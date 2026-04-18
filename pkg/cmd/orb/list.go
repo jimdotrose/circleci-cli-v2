@@ -71,6 +71,17 @@ func NewCmdList(f *cmdutil.Factory) *cobra.Command {
 				return nil
 			}
 
+			if opts.Plain {
+				for _, o := range orbs {
+					latest := "-"
+					if len(o.Versions) > 0 {
+						latest = o.Versions[0].Version
+					}
+					fmt.Fprintf(f.IOStreams.Out, "%s\t%s\n", o.Name, latest)
+				}
+				return nil
+			}
+
 			fmt.Fprintf(f.IOStreams.Out, "%-45s  %s\n", "ORB", "LATEST VERSION")
 			for _, o := range orbs {
 				latest := "-"
