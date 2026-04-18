@@ -25,5 +25,6 @@ func NewCmdJob(f *cmdutil.Factory) *cobra.Command {
 	cmd.AddCommand(NewCmdGet(f))
 	cmd.AddCommand(NewCmdCancel(f))
 	cmd.AddCommand(NewCmdArtifacts(f))
+	cmd.AddCommand(NewCmdLogs(f))
 	return cmd
 }

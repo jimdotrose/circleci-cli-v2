@@ -104,6 +104,27 @@ type Artifact struct {
 	URL        string `json:"url"`
 }
 
+// JobStep represents a step in a CircleCI job.
+type JobStep struct {
+	Name    string       `json:"name"`
+	Actions []StepAction `json:"actions"`
+}
+
+// StepAction is a single action within a job step.
+type StepAction struct {
+	Name      string `json:"name"`
+	Status    string `json:"status"`
+	Type      string `json:"type"`
+	OutputURL string `json:"output_url"`
+}
+
+// StepOutputMessage is one log line returned by a step output URL.
+type StepOutputMessage struct {
+	Message string `json:"message"`
+	Type    string `json:"type"` // "out" or "err"
+	Time    string `json:"time"`
+}
+
 // ── Project ───────────────────────────────────────────────────────────────────
 
 // Project represents a CircleCI project.
