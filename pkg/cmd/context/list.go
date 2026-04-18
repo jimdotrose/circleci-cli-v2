@@ -82,6 +82,13 @@ func NewCmdList(f *cmdutil.Factory) *cobra.Command {
 				return nil
 			}
 
+			if opts.Plain {
+				for _, ctx := range all {
+					fmt.Fprintf(f.IOStreams.Out, "%s\t%s\n", ctx.ID, ctx.Name)
+				}
+				return nil
+			}
+
 			for _, ctx := range all {
 				fmt.Fprintf(f.IOStreams.Out, "%-40s  %s\n", ctx.ID, ctx.Name)
 			}

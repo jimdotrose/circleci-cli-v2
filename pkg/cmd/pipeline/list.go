@@ -89,6 +89,14 @@ func NewCmdList(f *cmdutil.Factory) *cobra.Command {
 				return nil
 			}
 
+			if opts.Plain {
+				for _, p := range all {
+					fmt.Fprintf(f.IOStreams.Out, "%d\t%s\t%s\t%s\n",
+						p.Number, p.State, p.CreatedAt.Format("2006-01-02 15:04"), p.ID)
+				}
+				return nil
+			}
+
 			fmt.Fprintf(f.IOStreams.Out, "%-6s  %-10s  %-20s  %s\n", "NUMBER", "STATE", "CREATED", "ID")
 			for _, p := range all {
 				branch := ""
