@@ -1,0 +1,25 @@
+Permanently delete a CircleCI context and all its environment variables.
+
+This action is irreversible. All environment variables stored in the
+context will be lost. Any pipelines referencing this context will fail
+until updated to use a different context.
+
+Use --force to skip the confirmation prompt in non-interactive mode.
+
+Usage:
+  context delete <context-id> [flags]
+
+Examples:
+# Delete a context (prompts for confirmation):
+$ circleci context delete 00000000-0000-0000-0000-000000000000
+
+# Delete without confirmation:
+$ circleci context delete <id> --force
+
+# Delete in a CI script:
+$ circleci context delete <id> --force --no-prompt
+
+
+Flags:
+  -f, --force   Skip confirmation prompt
+  -h, --help    help for delete

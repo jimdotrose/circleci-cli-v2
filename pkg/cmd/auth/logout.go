@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 )
 
 // NewCmdLogout returns the `circleci auth logout` command.
@@ -37,7 +38,8 @@ func NewCmdLogout(f *cmdutil.Factory) *cobra.Command {
 			ios := f.IOStreams
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			if cfg.Token() == "" {
@@ -60,7 +62,8 @@ func NewCmdLogout(f *cmdutil.Factory) *cobra.Command {
 				return err
 			}
 			if err := cfg.Save(); err != nil {
-				return fmt.Errorf("saving config: %w", err)
+				return cierrors.New("SAVE_ERROR", "Could not save config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			fmt.Fprintf(ios.Out, "✓ Logged out of %s\n", cfg.Host())

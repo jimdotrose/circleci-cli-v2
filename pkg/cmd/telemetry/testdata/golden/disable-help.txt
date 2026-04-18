@@ -1,0 +1,23 @@
+Disable anonymous usage telemetry collection.
+
+Sets telemetry=false in ~/.circleci/cli.yml. You can also disable
+telemetry permanently via environment variables:
+
+  export CIRCLECI_NO_TELEMETRY=1   # or NO_ANALYTICS, DO_NOT_TRACK
+
+Usage:
+  telemetry disable [flags]
+
+Examples:
+# Disable telemetry:
+$ circleci telemetry disable
+
+# Disable and verify:
+$ circleci telemetry disable && circleci telemetry status
+
+# Equivalent settings command:
+$ circleci settings set telemetry false
+
+
+Flags:
+  -h, --help   help for disable

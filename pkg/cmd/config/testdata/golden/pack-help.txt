@@ -1,0 +1,26 @@
+Combine multiple YAML files from a directory into a single
+CircleCI config.yml.
+
+Files are merged by their top-level keys. Useful for splitting a
+large config into separate files for maintainability, then packing
+them before pushing to CircleCI.
+
+The directory must contain at least one .yml or .yaml file.
+Output is written to stdout.
+
+Usage:
+  config pack <dir> [flags]
+
+Examples:
+# Pack all YAML files in .circleci/src/:
+$ circleci config pack .circleci/src
+
+# Pack and write to config.yml:
+$ circleci config pack .circleci/src > .circleci/config.yml
+
+# Pack then validate:
+$ circleci config pack .circleci/src | circleci config validate -
+
+
+Flags:
+  -h, --help   help for pack

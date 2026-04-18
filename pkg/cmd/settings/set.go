@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 )
 
 // NewCmdSet returns the `circleci settings set` command.
@@ -40,14 +41,16 @@ func NewCmdSet(f *cmdutil.Factory) *cobra.Command {
 			key, value := args[0], args[1]
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			if err := cfg.Set(key, value); err != nil {
 				return err
 			}
 			if err := cfg.Save(); err != nil {
-				return fmt.Errorf("saving config: %w", err)
+				return cierrors.New("SAVE_ERROR", "Could not save config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			fmt.Fprintf(f.IOStreams.Out, "✓ %s set to %s\n", key, value)

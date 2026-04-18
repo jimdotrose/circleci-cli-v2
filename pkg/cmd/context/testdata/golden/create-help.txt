@@ -1,0 +1,32 @@
+Create a new CircleCI context for an organization.
+
+Contexts are scoped to an organization. Provide the organization's
+ID and type (organization or account). The created context can then
+be referenced in config.yml and have environment variables added.
+
+
+JSON Fields:
+  id, name, created_at
+
+Usage:
+  context create <name> [flags]
+
+Examples:
+# Create a context for an organization:
+$ circleci context create staging --org-id 00000000-0000-0000-0000-000000000000
+
+# Create and output as JSON:
+$ circleci context create production --org-id <id> --json
+
+# Create for an account (user) context:
+$ circleci context create my-ctx --org-id <id> --org-type account
+
+
+Flags:
+  -h, --help                help for create
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --org-id string       Organization ID
+      --org-type string     Organization type (organization or account) (default "organization")
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

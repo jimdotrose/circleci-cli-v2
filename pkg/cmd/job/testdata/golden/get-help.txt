@@ -1,0 +1,30 @@
+Fetch and display details for a specific CircleCI job.
+
+Requires the project slug and job number. The job number can be
+obtained from 'circleci job list' (the job_number field).
+
+
+JSON Fields:
+  id, name, project_slug, status, type, started_at, stopped_at, job_number, approval_request_id, approval_name, dependencies
+
+Usage:
+  job get <job-number> [flags]
+
+Examples:
+# Get job details:
+$ circleci job get 42 --project github/myorg/myrepo
+
+# Get as JSON:
+$ circleci job get 42 --project github/myorg/myrepo --json
+
+# Get job status:
+$ circleci job get 42 --project github/myorg/myrepo --jq '.status'
+
+
+Flags:
+  -h, --help                help for get
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --project string      Project slug (e.g. github/myorg/myrepo)
+      --template template   Format output using a Go template

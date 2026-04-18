@@ -1,0 +1,29 @@
+Process a CircleCI configuration file via the compile API.
+
+Expands orb references, resolves pipeline parameters, and outputs
+the fully-expanded YAML to stdout. Useful for debugging and
+inspecting the final config that CircleCI will execute.
+
+By default reads .circleci/config.yml from the current directory.
+
+Usage:
+  config process [<config-file>] [flags]
+
+Examples:
+# Process the default config:
+$ circleci config process
+
+# Process with pipeline parameters:
+$ circleci config process --pipeline-params '{"deploy_env":"staging"}'
+
+# Process a specific file:
+$ circleci config process path/to/config.yml
+
+# Process and write output to a file:
+$ circleci config process > expanded.yml
+
+
+Flags:
+  -h, --help                     help for process
+      --org-id string            Organization ID for processing context
+      --pipeline-params object   Pipeline parameters as a JSON object

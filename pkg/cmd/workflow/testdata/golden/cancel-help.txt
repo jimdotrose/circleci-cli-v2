@@ -1,0 +1,22 @@
+Cancel a currently running CircleCI workflow.
+
+Only workflows in a running state can be cancelled. Use --force to
+skip the confirmation prompt when running non-interactively.
+
+Usage:
+  workflow cancel <workflow-id> [flags]
+
+Examples:
+# Cancel a workflow (prompts for confirmation):
+$ circleci workflow cancel 00000000-0000-0000-0000-000000000000
+
+# Cancel without prompting:
+$ circleci workflow cancel <id> --force
+
+# Cancel in a CI script:
+$ circleci workflow cancel <id> --force --no-prompt
+
+
+Flags:
+  -f, --force   Skip confirmation prompt
+  -h, --help    help for cancel

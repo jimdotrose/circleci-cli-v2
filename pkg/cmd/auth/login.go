@@ -51,22 +51,22 @@ func NewCmdLogin(f *cmdutil.Factory) *cobra.Command {
 			ios := f.IOStreams
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			var token string
 
 			switch {
 			case withToken:
-				// Read token from stdin (supports: echo $TOKEN | circleci auth login --with-token)
 				data, err := io.ReadAll(ios.In)
 				if err != nil {
-					return fmt.Errorf("reading token from stdin: %w", err)
+					return cierrors.New("READ_ERROR", "Could not read token from stdin",
+						err.Error(), cierrors.ExitGeneralError)
 				}
 				token = strings.TrimRight(string(data), "\r\n")
 
 			case !ios.IsInteractive:
-				// CI / --no-prompt mode: must come from env var.
 				token = os.Getenv("CIRCLECI_TOKEN")
 				if token == "" {
 					token = os.Getenv("CIRCLECI_CLI_TOKEN")
@@ -84,11 +84,11 @@ func NewCmdLogin(f *cmdutil.Factory) *cobra.Command {
 				}
 
 			default:
-				// Interactive: prompt with masked input.
 				var err error
 				token, err = ios.ReadPassword("Paste your CircleCI API token: ")
 				if err != nil {
-					return fmt.Errorf("reading token: %w", err)
+					return cierrors.New("READ_ERROR", "Could not read token",
+						err.Error(), cierrors.ExitGeneralError)
 				}
 			}
 
@@ -106,10 +106,13 @@ func NewCmdLogin(f *cmdutil.Factory) *cobra.Command {
 				return err
 			}
 			if err := cfg.Save(); err != nil {
-				return fmt.Errorf("saving config: %w", err)
+				return cierrors.New("SAVE_ERROR", "Could not save config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
-			fmt.Fprintf(ios.Out, "✓ Token stored to %s\n", cfg.Path())
+			if !ios.Quiet {
+				fmt.Fprintf(ios.Out, "✓ Token stored to %s\n", cfg.Path())
+			}
 			return nil
 		},
 	}

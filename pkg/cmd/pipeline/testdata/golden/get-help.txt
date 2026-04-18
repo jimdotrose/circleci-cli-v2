@@ -1,0 +1,29 @@
+Fetch and display details for a specific CircleCI pipeline.
+
+Pass the pipeline UUID, which can be obtained from
+'circleci pipeline list' or from the CircleCI web app URL.
+
+
+JSON Fields:
+  id, project_slug, number, state, created_at, updated_at, trigger, vcs
+
+Usage:
+  pipeline get <pipeline-id> [flags]
+
+Examples:
+# Get pipeline details:
+$ circleci pipeline get 00000000-0000-0000-0000-000000000000
+
+# Get as JSON:
+$ circleci pipeline get <id> --json
+
+# Get the pipeline state:
+$ circleci pipeline get <id> --jq '.state'
+
+
+Flags:
+  -h, --help                help for get
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

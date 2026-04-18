@@ -6,11 +6,20 @@ import (
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
 
+	"os"
+
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/auth"
+	cmdconfig "github.com/CircleCI-Public/circleci-cli/pkg/cmd/config"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/context"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/diagnostic"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/job"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/pipeline"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/settings"
+	cmdtelemetry "github.com/CircleCI-Public/circleci-cli/pkg/cmd/telemetry"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/version"
+	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/workflow"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	"github.com/CircleCI-Public/circleci-cli/pkg/telemetry"
 )
 
 // NewCmdRoot builds the root cobra.Command with all global flags, command
@@ -26,6 +35,12 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 		}
 		if np, err := c.Root().PersistentFlags().GetBool("no-prompt"); err == nil && np {
 			f.IOStreams.SetInteractive(false)
+		}
+		if q, err := c.Root().PersistentFlags().GetBool("quiet"); err == nil && q {
+			f.IOStreams.Quiet = true
+		}
+		if dbg, err := c.Root().PersistentFlags().GetBool("debug"); err == nil && dbg {
+			f.Debug = true
 		}
 		// --host flag overrides config + env var when explicitly set.
 		if c.Root().PersistentFlags().Changed("host") {
@@ -51,6 +66,9 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			applyGlobalFlags(cmd)
+			if home, err := os.UserHomeDir(); err == nil {
+				telemetry.ShowNoticeIfNeeded(f.IOStreams.ErrOut, home)
+			}
 			return nil
 		},
 	}
@@ -79,6 +97,30 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	authCmd := auth.NewCmdAuth(f)
 	authCmd.GroupID = "core"
 	cmd.AddCommand(authCmd)
+
+	configCmd := cmdconfig.NewCmdConfig(f)
+	configCmd.GroupID = "core"
+	cmd.AddCommand(configCmd)
+
+	contextCmd := context.NewCmdContext(f)
+	contextCmd.GroupID = "core"
+	cmd.AddCommand(contextCmd)
+
+	pipelineCmd := pipeline.NewCmdPipeline(f)
+	pipelineCmd.GroupID = "core"
+	cmd.AddCommand(pipelineCmd)
+
+	workflowCmd := workflow.NewCmdWorkflow(f)
+	workflowCmd.GroupID = "core"
+	cmd.AddCommand(workflowCmd)
+
+	jobCmd := job.NewCmdJob(f)
+	jobCmd.GroupID = "core"
+	cmd.AddCommand(jobCmd)
+
+	telemetryCmd := cmdtelemetry.NewCmdTelemetry(f)
+	telemetryCmd.GroupID = "developer"
+	cmd.AddCommand(telemetryCmd)
 
 	settingsCmd := settings.NewCmdSettings(f)
 	settingsCmd.GroupID = "developer"

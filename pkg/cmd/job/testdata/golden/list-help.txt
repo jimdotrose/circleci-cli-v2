@@ -1,0 +1,29 @@
+List all jobs for a given CircleCI workflow.
+
+Pass the workflow UUID, which can be obtained from
+'circleci workflow list' or from the CircleCI web app URL.
+
+
+JSON Fields:
+  id, name, project_slug, status, type, started_at, stopped_at, job_number, approval_request_id, approval_name, dependencies
+
+Usage:
+  job list <workflow-id> [flags]
+
+Examples:
+# List jobs in a workflow:
+$ circleci job list 00000000-0000-0000-0000-000000000000
+
+# List as JSON:
+$ circleci job list <workflow-id> --json
+
+# List failed jobs only:
+$ circleci job list <workflow-id> --jq '[.[] | select(.status=="failed")]'
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

@@ -21,6 +21,7 @@ type IOStreams struct {
 	ColorEnabled   bool // false when NO_COLOR, CIRCLECI_NO_COLOR, CLICOLOR=0, TERM=dumb
 	SpinnerEnabled bool // false in CI mode or when stderr is not a TTY
 	UpdatesEnabled bool // false in CI mode or CIRCLECI_NO_UPDATE_NOTIFIER
+	Quiet          bool // suppress progress/informational output (--quiet/-q)
 }
 
 // System returns IOStreams wired to the real os.Std{in,out,err}, with all flags

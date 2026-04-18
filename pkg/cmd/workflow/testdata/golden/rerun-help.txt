@@ -1,0 +1,22 @@
+Rerun a CircleCI workflow from the beginning, or from failed jobs.
+
+By default reruns all jobs. Use --failed to rerun only the jobs
+that failed in the original run, saving credit and time.
+
+Usage:
+  workflow rerun <workflow-id> [flags]
+
+Examples:
+# Rerun all jobs in a workflow:
+$ circleci workflow rerun 00000000-0000-0000-0000-000000000000
+
+# Rerun only failed jobs:
+$ circleci workflow rerun <id> --failed
+
+# Rerun in a script:
+$ circleci workflow rerun <id> --failed --no-prompt
+
+
+Flags:
+      --failed   Rerun only failed jobs
+  -h, --help     help for rerun

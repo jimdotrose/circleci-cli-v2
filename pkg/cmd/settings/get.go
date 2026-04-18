@@ -39,7 +39,8 @@ func NewCmdGet(f *cmdutil.Factory) *cobra.Command {
 			key := args[0]
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			val, ok := cfg.Get(key)

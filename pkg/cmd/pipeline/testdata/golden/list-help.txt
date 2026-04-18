@@ -1,0 +1,33 @@
+List recent pipelines for a CircleCI project.
+
+The project slug format is <vcs-type>/<org>/<repo>, for example
+github/myorg/myrepo. Use --branch to filter to a specific branch
+and --limit to cap the number of results returned.
+
+
+JSON Fields:
+  id, project_slug, number, state, created_at, updated_at, trigger, vcs
+
+Usage:
+  pipeline list [flags]
+
+Examples:
+# List pipelines for a project:
+$ circleci pipeline list --project github/myorg/myrepo
+
+# Filter to a specific branch:
+$ circleci pipeline list --project github/myorg/myrepo --branch main
+
+# List as JSON and filter with jq:
+$ circleci pipeline list --project github/myorg/myrepo --jq '.[].id'
+
+
+Flags:
+      --branch string       Filter by branch name
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --limit int           Maximum number of pipelines to return (default 20)
+      --plain               Plain text output (tab-separated, no color)
+      --project string      Project slug (e.g. github/myorg/myrepo)
+      --template template   Format output using a Go template

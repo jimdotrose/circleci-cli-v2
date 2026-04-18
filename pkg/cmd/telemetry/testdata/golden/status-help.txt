@@ -1,0 +1,22 @@
+Show the current telemetry collection state.
+
+Reports the effective state after evaluating environment variables
+and the stored config setting. Environment variables always take
+precedence over the stored setting.
+
+Usage:
+  telemetry status [flags]
+
+Examples:
+# Check telemetry state:
+$ circleci telemetry status
+
+# Check in a script:
+$ circleci telemetry status --quiet && echo "telemetry on"
+
+# Show the configured setting:
+$ circleci settings get telemetry
+
+
+Flags:
+  -h, --help   help for status

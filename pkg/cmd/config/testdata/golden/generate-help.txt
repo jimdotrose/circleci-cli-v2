@@ -1,0 +1,26 @@
+Generate a minimal CircleCI configuration file to get started.
+
+Writes a basic config.yml with a single job and workflow that you
+can use as a starting point. By default writes to
+.circleci/config.yml in the current directory.
+
+Use --force to overwrite an existing file.
+
+Usage:
+  config generate [flags]
+
+Examples:
+# Generate .circleci/config.yml in the current directory:
+$ circleci config generate
+
+# Generate at a custom path:
+$ circleci config generate --out my-config.yml
+
+# Overwrite an existing config:
+$ circleci config generate --force
+
+
+Flags:
+  -f, --force        Overwrite existing config file
+  -h, --help         help for generate
+      --out string   Output path (default: .circleci/config.yml)

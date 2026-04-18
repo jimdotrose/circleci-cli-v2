@@ -22,6 +22,14 @@ func main() {
 	// Silence broken pipe errors when output is piped to head, grep -m 1, etc.
 	signal.Notify(make(chan os.Signal, 1), syscall.SIGPIPE)
 
+	// SIGINT (Ctrl+C): exit with ExitCancelled (6) instead of Go's default 2.
+	sigint := make(chan os.Signal, 1)
+	signal.Notify(sigint, os.Interrupt)
+	go func() {
+		<-sigint
+		os.Exit(cierrors.ExitCancelled)
+	}()
+
 	if code := run(); code != cierrors.ExitSuccess {
 		os.Exit(code)
 	}

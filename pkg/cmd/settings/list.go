@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmdutil"
+	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 )
 
 // NewCmdList returns the `circleci settings list` command.
@@ -43,7 +44,8 @@ func NewCmdList(f *cmdutil.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			for _, key := range cfg.Keys() {

@@ -1,0 +1,35 @@
+Trigger a new CircleCI pipeline for a project.
+
+Specify a branch or tag to trigger against. Optionally pass pipeline
+parameters as a JSON object. Parameters must match those declared in
+the 'parameters' section of your config.yml.
+
+
+JSON Fields:
+  id, state, number, created_at
+
+Usage:
+  pipeline trigger [flags]
+
+Examples:
+# Trigger a pipeline on main:
+$ circleci pipeline trigger --project github/myorg/myrepo --branch main
+
+# Trigger with pipeline parameters:
+$ circleci pipeline trigger --project github/myorg/myrepo --branch main \
+    --parameters '{"deploy_env":"staging","run_tests":true}'
+
+# Trigger on a tag:
+$ circleci pipeline trigger --project github/myorg/myrepo --tag v1.2.3
+
+
+Flags:
+      --branch string       Branch to trigger against
+  -h, --help                help for trigger
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --parameters object   Pipeline parameters as a JSON object
+      --plain               Plain text output (tab-separated, no color)
+      --project string      Project slug (e.g. github/myorg/myrepo)
+      --tag string          Tag to trigger against
+      --template template   Format output using a Go template

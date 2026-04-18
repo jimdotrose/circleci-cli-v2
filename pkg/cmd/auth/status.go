@@ -41,7 +41,8 @@ func NewCmdStatus(f *cmdutil.Factory) *cobra.Command {
 			ios := f.IOStreams
 			cfg, err := f.Config()
 			if err != nil {
-				return fmt.Errorf("loading config: %w", err)
+				return cierrors.New("CONFIG_ERROR", "Could not load config",
+					err.Error(), cierrors.ExitGeneralError)
 			}
 
 			token := cfg.Token()

@@ -3,7 +3,9 @@ package cmdutil
 import (
 	"os"
 
+	"github.com/CircleCI-Public/circleci-cli/pkg/apiclient"
 	"github.com/CircleCI-Public/circleci-cli/pkg/config"
+	cierrors "github.com/CircleCI-Public/circleci-cli/pkg/errors"
 	"github.com/CircleCI-Public/circleci-cli/pkg/iostreams"
 )
 
@@ -13,6 +15,7 @@ import (
 // Config for a MockConfig, etc.
 type Factory struct {
 	IOStreams *iostreams.IOStreams
+	Debug    bool // set by --debug flag; enables HTTP request/response logging
 
 	// Config returns the loaded CLI configuration. Lazily evaluated so
 	// commands that don't need config don't pay the file-read cost.
@@ -22,7 +25,8 @@ type Factory struct {
 	//   --host flag > CIRCLECI_HOST env > config file > default
 	BaseURL func() string
 
-	// APIClient func() (*apiclient.Client, error)  — wired in Sprint 3
+	// APIClient returns a configured REST client for the CircleCI API v2.
+	APIClient func() (*apiclient.Client, error)
 }
 
 // New builds a Factory wired to real system streams and a default base URL.
@@ -56,6 +60,18 @@ func New() *Factory {
 			return "https://circleci.com"
 		}
 		return cfg.Host()
+	}
+
+	f.APIClient = func() (*apiclient.Client, error) {
+		cfg, err := f.Config()
+		if err != nil {
+			return nil, err
+		}
+		token := cfg.Token()
+		if token == "" {
+			return nil, cierrors.ErrAuthRequired
+		}
+		return apiclient.NewWithDebug(f.BaseURL(), token, f.Debug, f.IOStreams.ErrOut), nil
 	}
 
 	return f

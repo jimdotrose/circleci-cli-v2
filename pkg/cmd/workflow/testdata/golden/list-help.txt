@@ -1,0 +1,29 @@
+List all workflows for a given pipeline.
+
+Pass the pipeline UUID, which can be obtained from
+'circleci pipeline list' or from the CircleCI web app URL.
+
+
+JSON Fields:
+  id, name, pipeline_id, project_slug, status, started_by, pipeline_number, created_at, stopped_at
+
+Usage:
+  workflow list <pipeline-id> [flags]
+
+Examples:
+# List workflows for a pipeline:
+$ circleci workflow list 00000000-0000-0000-0000-000000000000
+
+# List as JSON:
+$ circleci workflow list <pipeline-id> --json
+
+# Filter running workflows:
+$ circleci workflow list <pipeline-id> --jq '[.[] | select(.status=="running")]'
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

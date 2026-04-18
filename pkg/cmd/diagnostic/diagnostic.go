@@ -92,14 +92,16 @@ func callMe(host, token string) (string, error) {
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return "", fmt.Errorf("building request: %w", err)
+		return "", cierrors.New("REQUEST_ERROR", "Could not build request",
+			err.Error(), cierrors.ExitAPIError)
 	}
 	req.Header.Set("Circle-Token", token)
 	req.Header.Set("Accept", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("connecting to %s: %w", host, err)
+		return "", cierrors.New("CONNECT_ERROR", "Could not connect to API",
+			fmt.Sprintf("connecting to %s: %v", host, err), cierrors.ExitAPIError)
 	}
 	defer resp.Body.Close()
 
@@ -112,14 +114,16 @@ func callMe(host, token string) (string, error) {
 		).WithSuggestions("Run: circleci auth login")
 	}
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("unexpected response %d from %s", resp.StatusCode, host)
+		return "", cierrors.New("API_ERROR", fmt.Sprintf("API error %d", resp.StatusCode),
+			fmt.Sprintf("unexpected response %d from %s", resp.StatusCode, host), cierrors.ExitAPIError)
 	}
 
 	var body struct {
 		Login string `json:"login"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		return "", fmt.Errorf("decoding response: %w", err)
+		return "", cierrors.New("DECODE_ERROR", "Could not decode API response",
+			err.Error(), cierrors.ExitAPIError)
 	}
 	return body.Login, nil
 }

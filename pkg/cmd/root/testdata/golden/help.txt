@@ -12,10 +12,16 @@ Usage:
 
 Core Commands:
   auth        Authenticate with CircleCI
+  config      Manage CircleCI configuration files
+  context     Manage CircleCI contexts
+  job         Manage CircleCI jobs
+  pipeline    Manage CircleCI pipelines
+  workflow    Manage CircleCI workflows
 
 Developer Tools:
   diagnostic  Check configuration and API connectivity
   settings    Manage CLI configuration settings
+  telemetry   Manage anonymous usage telemetry
   version     Print the circleci CLI version
 
 Additional Commands:

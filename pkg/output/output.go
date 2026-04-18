@@ -27,7 +27,7 @@ func (o *Options) IsJSON() bool {
 // "JSON Fields:" section to cmd.Long derived from the json tags of example.
 // example should be a pointer to (or slice of) the struct used for JSON output.
 func AddFlags(cmd *cobra.Command, opts *Options, example interface{}) {
-	cmd.Flags().BoolVar(&opts.JSON, "json", false, "Output as JSON")
+	cmd.Flags().BoolVarP(&opts.JSON, "json", "j", false, "Output as JSON")
 	cmd.Flags().StringVar(&opts.JQ, "jq", "", "Filter JSON output with a jq `expression`")
 	cmd.Flags().StringVar(&opts.Template, "template", "", "Format output using a Go `template`")
 	cmd.Flags().BoolVar(&opts.Plain, "plain", false, "Plain text output (tab-separated, no color)")
