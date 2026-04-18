@@ -1,0 +1,29 @@
+Commands for working with CircleCI orbs.
+
+Orbs are reusable packages of CircleCI configuration — jobs, commands,
+and executors — that can be shared across projects and published to
+the CircleCI Orb Registry.
+
+Typical workflow:
+  1. Author an orb YAML file.
+  2. Validate it with 'circleci orb validate'.
+  3. Publish a dev version with 'circleci orb publish ... @dev:label'.
+  4. Promote to a release with 'circleci orb promote'.
+
+Usage:
+  orb [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  info        Show details for an orb
+  list        List orbs in the registry
+  promote     Promote a dev orb to a semantic release
+  publish     Publish an orb version
+  search      Search for orbs in the registry
+  validate    Validate an orb YAML file
+
+Flags:
+  -h, --help   help for orb
+
+Use "orb [command] --help" for more information about a command.

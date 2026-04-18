@@ -9,6 +9,7 @@ import (
 
 	cmdapi "github.com/CircleCI-Public/circleci-cli/pkg/cmd/api"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/auth"
+	cmdorb "github.com/CircleCI-Public/circleci-cli/pkg/cmd/orb"
 	cmdconfig "github.com/CircleCI-Public/circleci-cli/pkg/cmd/config"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/context"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/diagnostic"
@@ -163,6 +164,10 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	runnerCmd := runner.NewCmdRunner(f)
 	runnerCmd.GroupID = "core"
 	cmd.AddCommand(runnerCmd)
+
+	orbCmd := cmdorb.NewCmdOrb(f)
+	orbCmd.GroupID = "core"
+	cmd.AddCommand(orbCmd)
 
 	policyCmd := cmdpolicy.NewCmdPolicy(f)
 	policyCmd.GroupID = "developer"

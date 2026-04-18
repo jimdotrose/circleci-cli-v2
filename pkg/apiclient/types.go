@@ -209,3 +209,34 @@ type ScheduledTrigger struct {
 type Namespace struct {
 	Name string `json:"name"`
 }
+
+// ── Orb ───────────────────────────────────────────────────────────────────────
+
+// Orb represents an entry in the CircleCI Orb Registry.
+type Orb struct {
+	ID         string       `json:"id"`
+	Name       string       `json:"name"`
+	Namespace  string       `json:"namespace"`
+	IsPrivate  bool         `json:"is_private"`
+	Statistics OrbStats     `json:"statistics"`
+	Versions   []OrbVersion `json:"versions"`
+}
+
+// OrbVersion represents a specific published version of an orb.
+type OrbVersion struct {
+	Version     string    `json:"version"`
+	CreatedAt   time.Time `json:"created_at"`
+	Source      string    `json:"source"`
+	Description string    `json:"description"`
+}
+
+// OrbStats holds usage statistics for an orb.
+type OrbStats struct {
+	Last30DayRunCount int `json:"last_30_day_run_count"`
+}
+
+// OrbValidateResponse is returned by POST /orb/validate.
+type OrbValidateResponse struct {
+	Valid  bool     `json:"valid"`
+	Errors []string `json:"errors,omitempty"`
+}

@@ -19,6 +19,7 @@ Core Commands:
   config         Manage CircleCI configuration files
   context        Manage CircleCI contexts
   job            Manage CircleCI jobs
+  orb            Manage and explore CircleCI orbs
   pipeline       Manage CircleCI pipelines
   project        Manage CircleCI projects
   runner         Manage CircleCI self-hosted runners

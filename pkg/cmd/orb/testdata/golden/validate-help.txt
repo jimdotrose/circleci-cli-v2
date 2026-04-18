@@ -1,0 +1,24 @@
+Validate an orb YAML file against the CircleCI orb schema.
+
+By default reads orb.yml from the current directory.
+Exits 0 when the orb is valid, 7 when validation fails.
+
+Validation checks the YAML structure and schema without publishing.
+Use 'circleci orb publish' after validation to publish to the registry.
+
+Usage:
+  orb validate [<file>] [flags]
+
+Examples:
+# Validate orb.yml in the current directory:
+$ circleci orb validate
+
+# Validate a specific file:
+$ circleci orb validate src/orb.yml
+
+# Use in a CI pipeline (non-zero exit on failure):
+$ circleci orb validate && circleci orb publish orb.yml myorg/myorb@dev:ci
+
+
+Flags:
+  -h, --help   help for validate
