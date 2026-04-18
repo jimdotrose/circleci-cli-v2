@@ -1,0 +1,26 @@
+Promote a development orb version to a numbered semantic release.
+
+The first argument is the dev orb reference: namespace/name@dev:label.
+The second argument is the version segment to increment: major, minor,
+or patch. The new version is computed from the orb's latest published
+semantic version.
+
+Use --dry-run to preview the promotion without executing it.
+
+Usage:
+  orb promote <orb@dev:label> <segment> [flags]
+
+Examples:
+# Promote a dev orb, incrementing the patch version:
+$ circleci orb promote myorg/myorb@dev:my-feature patch
+
+# Promote and bump the minor version:
+$ circleci orb promote myorg/myorb@dev:my-feature minor
+
+# Preview the promotion without executing:
+$ circleci orb promote myorg/myorb@dev:my-feature patch --dry-run
+
+
+Flags:
+  -n, --dry-run   Preview the promotion without executing
+  -h, --help      help for promote

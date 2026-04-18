@@ -1,0 +1,39 @@
+List orbs available in the CircleCI Orb Registry.
+
+Optionally filter by --namespace to list orbs published by a specific
+organization. Use --private to include private orbs your token can
+access. Use --sort to control ordering.
+
+
+JSON Fields:
+  id, name, namespace, is_private, statistics, versions
+
+Usage:
+  orb list [flags]
+
+Examples:
+# List all public orbs:
+$ circleci orb list
+
+# List orbs for a namespace:
+$ circleci orb list --namespace circleci
+
+# List as JSON:
+$ circleci orb list --namespace myorg --json
+
+# Extract orb names with jq:
+$ circleci orb list --json --jq '.[].name'
+
+# Sort by most recently published:
+$ circleci orb list --sort latest
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --namespace string    Filter to a specific namespace
+      --plain               Plain text output (tab-separated, no color)
+      --private             Include private orbs accessible to the token
+      --sort string         Sort order: popularity, latest, alphabetical (default: "popularity") (default "popularity")
+      --template template   Format output using a Go template

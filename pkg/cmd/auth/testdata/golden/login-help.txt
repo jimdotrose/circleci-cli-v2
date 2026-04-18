@@ -1,8 +1,11 @@
 Store a CircleCI personal API token for use by the CLI.
 
-The token is saved to ~/.circleci/cli.yml and used for all subsequent
-commands that require authentication. To authenticate with a CircleCI
-Server instance, set the host with:
+The token is saved to the OS keychain (macOS Keychain, Windows Credential
+Manager, or Linux Secret Service) when available, falling back to
+~/.circleci/cli.yml when no keychain daemon is running. Tokens stored in
+the keychain are never written to disk in plaintext.
+
+To authenticate with a CircleCI Server instance, set the host first:
 
   circleci settings set host https://circleci.mycompany.com
 
