@@ -15,7 +15,8 @@ import (
 // Config for a MockConfig, etc.
 type Factory struct {
 	IOStreams *iostreams.IOStreams
-	Debug    bool // set by --debug flag; enables HTTP request/response logging
+	Debug      bool // set by --debug flag; enables HTTP request/response logging
+	JSONOutput bool // true when --json is active; errors are written as JSON to stderr
 
 	// Config returns the loaded CLI configuration. Lazily evaluated so
 	// commands that don't need config don't pay the file-read cost.

@@ -41,25 +41,16 @@ func NewCmdDelete(f *cmdutil.Factory) *cobra.Command {
 			id := args[0]
 
 			if !force && f.IOStreams.IsInteractive {
-				// Show context name before deleting.
-				client, err := f.APIClient()
-				if err != nil {
-					return err
-				}
-				ctx, err := client.GetContext(id)
-				if err != nil {
-					return err
-				}
-				fmt.Fprintf(f.IOStreams.ErrOut, "This will permanently delete context %q (%s).\n", ctx.Name, id)
-				fmt.Fprint(f.IOStreams.ErrOut, "Are you sure? Type the context name to confirm: ")
+				// Show context ID before deleting and ask for y/N confirmation.
+				fmt.Fprintf(f.IOStreams.ErrOut, "Permanently delete context %s? [y/N] ", id)
 
-				var confirm string
-				fmt.Fscan(f.IOStreams.In, &confirm)
-				if confirm != ctx.Name {
+				var answer string
+				fmt.Fscan(f.IOStreams.In, &answer)
+				if answer != "y" && answer != "Y" {
 					return cierrors.New(
 						"CANCELLED",
 						"Delete cancelled",
-						"Context name did not match. No changes made.",
+						"No changes made.",
 						cierrors.ExitCancelled,
 					)
 				}

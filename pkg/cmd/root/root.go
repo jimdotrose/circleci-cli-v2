@@ -73,6 +73,9 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 		if dbg, err := c.Root().PersistentFlags().GetBool("debug"); err == nil && dbg {
 			f.Debug = true
 		}
+		if fl := c.Flags().Lookup("json"); fl != nil && fl.Value.String() == "true" {
+			f.JSONOutput = true
+		}
 		// --host flag overrides config + env var when explicitly set.
 		if c.Root().PersistentFlags().Changed("host") {
 			host, _ := c.Root().PersistentFlags().GetString("host")

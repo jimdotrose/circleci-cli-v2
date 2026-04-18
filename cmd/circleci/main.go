@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -40,13 +41,40 @@ func run() int {
 	rootCmd := root.NewCmdRoot(f, buildVersion)
 
 	if err := rootCmd.Execute(); err != nil {
-		var cliErr *cierrors.CLIError
-		if errors.As(err, &cliErr) {
-			fmt.Fprintln(f.IOStreams.ErrOut, cliErr.Error())
+		exitCode := cierrors.GetExitCode(err)
+		if f.JSONOutput {
+			var cliErr *cierrors.CLIError
+			type jsonErr struct {
+				Code        string   `json:"code,omitempty"`
+				Title       string   `json:"title"`
+				Message     string   `json:"message"`
+				Suggestions []string `json:"suggestions,omitempty"`
+				ExitCode    int      `json:"exit_code"`
+			}
+			var je jsonErr
+			if errors.As(err, &cliErr) {
+				je = jsonErr{
+					Code:        cliErr.Code,
+					Title:       cliErr.Title,
+					Message:     cliErr.Message,
+					Suggestions: cliErr.Suggestions,
+					ExitCode:    cliErr.ExitCode,
+				}
+			} else {
+				je = jsonErr{Title: "Error", Message: err.Error(), ExitCode: exitCode}
+			}
+			if b, merr := json.Marshal(map[string]interface{}{"error": je}); merr == nil {
+				fmt.Fprintln(f.IOStreams.ErrOut, string(b))
+			}
 		} else {
-			fmt.Fprintf(f.IOStreams.ErrOut, "Error: %s\n", err)
+			var cliErr *cierrors.CLIError
+			if errors.As(err, &cliErr) {
+				fmt.Fprintln(f.IOStreams.ErrOut, cliErr.Error())
+			} else {
+				fmt.Fprintf(f.IOStreams.ErrOut, "Error: %s\n", err)
+			}
 		}
-		return cierrors.GetExitCode(err)
+		return exitCode
 	}
 	return cierrors.ExitSuccess
 }
