@@ -1,0 +1,31 @@
+Claim a new orb namespace for an organization or account.
+
+The namespace name must be globally unique across CircleCI. Once
+claimed, all orbs published under it will be prefixed with the
+namespace name (e.g. myorg/myorb).
+
+Use --owner-id with your organization UUID and --owner-type set
+to "organization" or "account".
+
+Usage:
+  namespace create <name> [flags]
+
+Examples:
+# Create a namespace for an organization:
+$ circleci namespace create myorg \
+    --owner-id $ORG_ID --owner-type organization
+
+# Create a namespace for a personal account:
+$ circleci namespace create myname \
+    --owner-id $ACCOUNT_ID --owner-type account
+
+# Create and inspect the response:
+$ circleci namespace create myorg \
+    --owner-id $ORG_ID --owner-type organization --json
+
+
+Flags:
+  -h, --help                help for create
+      --json                Output result as JSON
+      --owner-id string     Organization or account UUID
+      --owner-type string   Owner type: 'organization' or 'account'

@@ -1,0 +1,23 @@
+Enable anonymous usage telemetry collection.
+
+Sets telemetry=true in ~/.circleci/cli.yml. This setting is
+overridden by environment variables — if CIRCLECI_NO_TELEMETRY,
+NO_ANALYTICS, DO_NOT_TRACK, or CI=true are set, telemetry will
+remain disabled regardless of this setting.
+
+Usage:
+  telemetry enable [flags]
+
+Examples:
+# Enable telemetry:
+$ circleci telemetry enable
+
+# Enable and verify:
+$ circleci telemetry enable && circleci telemetry status
+
+# Equivalent settings command:
+$ circleci settings set telemetry true
+
+
+Flags:
+  -h, --help   help for enable

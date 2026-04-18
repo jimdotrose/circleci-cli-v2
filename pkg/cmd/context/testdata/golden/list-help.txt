@@ -1,0 +1,30 @@
+List all CircleCI contexts visible to the authenticated user.
+
+Use --org-slug to filter to a specific organization. The slug
+format is <vcs-type>/<org-name>, e.g. github/myorg.
+
+
+JSON Fields:
+  id, name, created_at
+
+Usage:
+  context list [flags]
+
+Examples:
+# List contexts for a GitHub org:
+$ circleci context list --org-slug github/myorg
+
+# List as JSON:
+$ circleci context list --org-slug github/myorg --json
+
+# Filter with jq:
+$ circleci context list --org-slug github/myorg --jq '.[].name'
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --org-slug string     Organization slug (e.g. github/myorg)
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

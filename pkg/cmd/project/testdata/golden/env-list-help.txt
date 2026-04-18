@@ -1,0 +1,29 @@
+List all environment variables for a CircleCI project.
+
+Variable values are always redacted (shown as "xxxx") — only
+names are returned by the API. Use 'set' to update a value.
+
+
+JSON Fields:
+  name, value
+
+Usage:
+  project env list <project-slug> [flags]
+
+Examples:
+# List env vars for a project:
+$ circleci project env list github/myorg/myrepo
+
+# List as JSON:
+$ circleci project env list github/myorg/myrepo --json
+
+# Extract names only:
+$ circleci project env list github/myorg/myrepo --jq '.[].name'
+
+
+Flags:
+  -h, --help                help for list
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

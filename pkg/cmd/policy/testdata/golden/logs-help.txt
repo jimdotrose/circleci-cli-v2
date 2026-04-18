@@ -1,0 +1,35 @@
+List historical policy decision logs for an organization.
+
+Each log entry records the config that was evaluated, the decision
+result (pass/fail), and any policy violations. Use --after and
+--before to filter by time range.
+
+
+JSON Fields:
+  id, created_at, decision, metadata
+
+Usage:
+  policy logs [flags]
+
+Examples:
+# List recent decision logs:
+$ circleci policy logs --owner-id <org-id>
+
+# Filter to a time range:
+$ circleci policy logs --owner-id <org-id> \
+    --after 2024-01-01 --before 2024-02-01
+
+# List as JSON:
+$ circleci policy logs --owner-id <org-id> --json
+
+
+Flags:
+      --after string        Filter logs after this timestamp (RFC3339)
+      --before string       Filter logs before this timestamp (RFC3339)
+  -h, --help                help for logs
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --limit int           Maximum number of logs to return (default 20)
+      --owner-id string     Organization ID
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

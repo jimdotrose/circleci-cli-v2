@@ -1,0 +1,16 @@
+Commands for inspecting registered self-hosted runner agent instances.
+
+Runner instances are the individual agents registered under a
+resource class. Use these commands to monitor connectivity,
+version, and last-used status.
+
+Usage:
+  runner instance [command]
+
+Available Commands:
+  list        List runner instances for a resource class
+
+Flags:
+  -h, --help   help for instance
+
+Use "runner instance [command] --help" for more information about a command.

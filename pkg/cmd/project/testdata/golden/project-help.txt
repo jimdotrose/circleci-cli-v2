@@ -1,0 +1,20 @@
+Commands for working with CircleCI projects.
+
+Projects are the unit of work associated with a VCS repository.
+Each project can have environment variables, follow/unfollow state,
+and pipeline triggers.
+
+Usage:
+  project [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  env         Manage project environment variables
+  follow      Follow a project to enable builds
+  help        Help about any command
+  list        List followed projects
+
+Flags:
+  -h, --help   help for project
+
+Use "project [command] --help" for more information about a command.

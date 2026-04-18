@@ -1,0 +1,23 @@
+Delete a self-hosted runner resource class.
+
+This action is irreversible. Any runner agents registered under
+this resource class will no longer be able to claim jobs.
+Use --force to skip the confirmation prompt.
+
+Usage:
+  runner resource-class delete <resource-class> [flags]
+
+Examples:
+# Delete a resource class (prompts for confirmation):
+$ circleci runner resource-class delete myorg/old-runner
+
+# Delete without prompting:
+$ circleci runner resource-class delete myorg/old-runner --force
+
+# Delete in a CI script:
+$ circleci runner resource-class delete myorg/old-runner --force --no-prompt
+
+
+Flags:
+  -f, --force   Skip confirmation prompt
+  -h, --help    help for delete

@@ -1,0 +1,20 @@
+Commands for working with CircleCI configuration files.
+
+Validate, process, pack, and generate .circleci/config.yml files
+locally or using the CircleCI compile API.
+
+Usage:
+  config [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  generate    Generate a starter CircleCI config file
+  help        Help about any command
+  pack        Pack multiple YAML files into a single config
+  process     Process a CircleCI config file (expand orbs and pipeline params)
+  validate    Validate a CircleCI config file
+
+Flags:
+  -h, --help   help for config
+
+Use "config [command] --help" for more information about a command.

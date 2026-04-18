@@ -1,0 +1,29 @@
+Fetch and display details for a specific CircleCI workflow.
+
+Pass the workflow UUID, which can be obtained from
+'circleci workflow list' or from the CircleCI web app URL.
+
+
+JSON Fields:
+  id, name, pipeline_id, project_slug, status, started_by, pipeline_number, created_at, stopped_at
+
+Usage:
+  workflow get <workflow-id> [flags]
+
+Examples:
+# Get workflow details:
+$ circleci workflow get 00000000-0000-0000-0000-000000000000
+
+# Get as JSON:
+$ circleci workflow get <id> --json
+
+# Check workflow status:
+$ circleci workflow get <id> --jq '.status'
+
+
+Flags:
+  -h, --help                help for get
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --template template   Format output using a Go template

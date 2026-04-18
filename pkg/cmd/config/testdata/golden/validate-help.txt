@@ -1,0 +1,25 @@
+Validate a CircleCI configuration file using the CircleCI compile API.
+
+By default reads .circleci/config.yml from the current directory.
+Exits 0 on success, 7 if the configuration is invalid.
+
+Pass --org-id to include organization-level settings (pipeline
+parameters, orb allowlists) in the validation.
+
+Usage:
+  config validate [<config-file>] [flags]
+
+Examples:
+# Validate the default config file:
+$ circleci config validate
+
+# Validate a specific file:
+$ circleci config validate path/to/config.yml
+
+# Validate with organization-level settings:
+$ circleci config validate --org-id 00000000-0000-0000-0000-000000000000
+
+
+Flags:
+  -h, --help            help for validate
+      --org-id string   Organization ID for validation context

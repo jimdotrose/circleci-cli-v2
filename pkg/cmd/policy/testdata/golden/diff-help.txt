@@ -1,0 +1,24 @@
+Show what would change by pushing the policy bundle in <bundle-dir>
+without actually applying it (dry run).
+
+The output shows added, modified, and deleted policy documents
+compared to the currently active bundle.
+
+Usage:
+  policy diff <bundle-dir> [flags]
+
+Examples:
+# Preview policy changes:
+$ circleci policy diff ./policies --owner-id <org-id>
+
+# Use in CI before merging:
+$ circleci policy diff ./policies --owner-id $ORG_ID
+
+# Combine with push in a pipeline:
+$ circleci policy diff ./policies --owner-id $ORG_ID && \
+    circleci policy push ./policies --owner-id $ORG_ID --no-prompt
+
+
+Flags:
+  -h, --help              help for diff
+      --owner-id string   Organization ID

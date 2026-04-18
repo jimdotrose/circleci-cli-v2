@@ -1,0 +1,33 @@
+Create a new authentication token for a self-hosted runner resource class.
+
+The token value is shown only once. Store it securely — it cannot
+be retrieved again after creation. Use --nickname to label the token
+for easy identification.
+
+
+JSON Fields:
+  id, resource_class, nickname, created_at, token
+
+Usage:
+  runner token create [flags]
+
+Examples:
+# Create a token for a resource class:
+$ circleci runner token create --resource-class myorg/my-runner
+
+# Create with a nickname:
+$ circleci runner token create --resource-class myorg/my-runner \
+    --nickname "prod-server-01"
+
+# Create and output as JSON (includes token value):
+$ circleci runner token create --resource-class myorg/my-runner --json
+
+
+Flags:
+  -h, --help                    help for create
+      --jq expression           Filter JSON output with a jq expression
+  -j, --json                    Output as JSON
+      --nickname string         Human-readable label for the token
+      --plain                   Plain text output (tab-separated, no color)
+      --resource-class string   Resource class to create token for
+      --template template       Format output using a Go template

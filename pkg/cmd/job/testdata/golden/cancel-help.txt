@@ -1,0 +1,23 @@
+Cancel a currently running CircleCI job.
+
+Requires the project slug and job number. Use --force to skip the
+confirmation prompt in non-interactive mode.
+
+Usage:
+  job cancel <job-number> [flags]
+
+Examples:
+# Cancel a job (prompts for confirmation):
+$ circleci job cancel 42 --project github/myorg/myrepo
+
+# Cancel without prompting:
+$ circleci job cancel 42 --project github/myorg/myrepo --force
+
+# Cancel in a CI script:
+$ circleci job cancel 42 --project github/myorg/myrepo --force --no-prompt
+
+
+Flags:
+  -f, --force            Skip confirmation prompt
+  -h, --help             help for cancel
+      --project string   Project slug (e.g. github/myorg/myrepo)

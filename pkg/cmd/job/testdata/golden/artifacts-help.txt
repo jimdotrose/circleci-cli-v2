@@ -1,0 +1,31 @@
+List all artifacts produced by a CircleCI job.
+
+Requires the project slug and job number. Artifact URLs can be
+used to download files produced by the job (test reports,
+coverage, binaries, etc.).
+
+
+JSON Fields:
+  path, node_index, url
+
+Usage:
+  job artifacts <job-number> [flags]
+
+Examples:
+# List artifacts for a job:
+$ circleci job artifacts 42 --project github/myorg/myrepo
+
+# List artifact URLs only:
+$ circleci job artifacts 42 --project github/myorg/myrepo --jq '.[].url'
+
+# List as JSON:
+$ circleci job artifacts 42 --project github/myorg/myrepo --json
+
+
+Flags:
+  -h, --help                help for artifacts
+      --jq expression       Filter JSON output with a jq expression
+  -j, --json                Output as JSON
+      --plain               Plain text output (tab-separated, no color)
+      --project string      Project slug (e.g. github/myorg/myrepo)
+      --template template   Format output using a Go template

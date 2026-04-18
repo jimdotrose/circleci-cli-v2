@@ -1,0 +1,25 @@
+Rerun a CircleCI workflow from the beginning, or from failed jobs.
+
+By default reruns all jobs. Use --failed to rerun only the jobs
+that failed in the original run, saving credit and time.
+
+Use --dry-run to preview which jobs would be rerun without triggering.
+
+Usage:
+  workflow rerun <workflow-id> [flags]
+
+Examples:
+# Rerun all jobs in a workflow:
+$ circleci workflow rerun 00000000-0000-0000-0000-000000000000
+
+# Rerun only failed jobs:
+$ circleci workflow rerun <id> --failed
+
+# Preview what would be rerun without triggering:
+$ circleci workflow rerun <id> --failed --dry-run
+
+
+Flags:
+  -n, --dry-run   Print what would be rerun without making API call
+      --failed    Rerun only failed jobs
+  -h, --help      help for rerun

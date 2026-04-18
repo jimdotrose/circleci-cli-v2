@@ -1,0 +1,18 @@
+Commands for managing CircleCI project environment variables.
+
+Environment variable values are never returned by the API — only
+names are readable. Use 'set' to create or update a variable.
+
+Usage:
+  project env [command]
+
+Available Commands:
+  delete      Delete a project environment variable
+  get         Get a project environment variable (name only; value is redacted)
+  list        List project environment variables
+  set         Set a project environment variable
+
+Flags:
+  -h, --help   help for env
+
+Use "project env [command] --help" for more information about a command.

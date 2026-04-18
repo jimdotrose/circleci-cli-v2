@@ -1,0 +1,51 @@
+Work with CircleCI from the command line.
+
+Run 'circleci <command> --help' for usage of a specific command.
+Run 'circleci help <topic>' for detailed help on a topic:
+
+  circleci help environment    All supported environment variables
+  circleci help exit-codes     Documented exit codes
+  circleci help formatting     --json, --jq, and --template usage
+  circleci help api            Raw API access with 'circleci api'
+
+Report bugs and request features:
+  https://github.com/CircleCI-Public/circleci-cli/issues
+
+Usage:
+  circleci [command]
+
+Core Commands:
+  auth           Authenticate with CircleCI
+  config         Manage CircleCI configuration files
+  context        Manage CircleCI contexts
+  job            Manage CircleCI jobs
+  pipeline       Manage CircleCI pipelines
+  project        Manage CircleCI projects
+  runner         Manage CircleCI self-hosted runners
+  trigger        Manage scheduled pipeline triggers
+  workflow       Manage CircleCI workflows
+
+Developer Tools:
+  api            Make authenticated requests to the CircleCI API
+  diagnostic     Check configuration and API connectivity
+  namespace      Manage orb namespaces
+  policy         Manage CircleCI config policies
+  settings       Manage CLI configuration settings
+  telemetry      Manage anonymous usage telemetry
+  version        Print the circleci CLI version
+
+Additional Commands:
+  completion     Generate the autocompletion script for the specified shell
+  help           Help about any command
+
+Flags:
+  -d, --debug          Enable HTTP debug logging (env: CIRCLECI_DEBUG)
+  -h, --help           help for circleci
+      --host string    CircleCI host (env: CIRCLECI_HOST) (default "https://circleci.com")
+      --no-color       Disable ANSI color output (env: CIRCLECI_NO_COLOR, NO_COLOR)
+      --no-prompt      Disable interactive prompts (env: CIRCLECI_NO_INTERACTIVE, CI)
+  -q, --quiet          Suppress progress and informational output
+  -T, --token string   CircleCI API token (env: CIRCLECI_TOKEN)
+  -v, --version        version for circleci
+
+Use "circleci [command] --help" for more information about a command.

@@ -1,0 +1,27 @@
+Evaluate a CircleCI config file against the organization's active
+policy bundle and show the decision result.
+
+Exits 0 when the config passes all policies. Exits 7 when any
+hard-failure policy is violated. Soft failures are reported but
+do not change the exit code.
+
+Usage:
+  policy decide <config-file> [flags]
+
+Examples:
+# Evaluate the default config:
+$ circleci policy decide .circleci/config.yml --owner-id <org-id>
+
+# Evaluate with pipeline parameters:
+$ circleci policy decide .circleci/config.yml --owner-id <org-id> \
+    --pipeline-params '{"deploy_env":"staging"}'
+
+# Use in CI to block merges:
+$ circleci policy decide .circleci/config.yml --owner-id $ORG_ID || exit 1
+
+
+Flags:
+  -h, --help                     help for decide
+      --meta-project-id string   Project ID for metadata context
+      --owner-id string          Organization ID
+      --pipeline-params string   Pipeline parameters as JSON

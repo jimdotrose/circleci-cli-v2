@@ -1,0 +1,23 @@
+Run OPA unit tests defined alongside the policy bundle in <bundle-dir>.
+
+Test files must match the pattern *_test.rego. Exits 0 when all
+tests pass, non-zero otherwise. Use this in CI to gate pushes.
+
+Usage:
+  policy test <bundle-dir> [flags]
+
+Examples:
+# Run tests in a bundle directory:
+$ circleci policy test ./policies --owner-id <org-id>
+
+# Run tests and block push on failure:
+$ circleci policy test ./policies --owner-id $ORG_ID && \
+    circleci policy push ./policies --owner-id $ORG_ID --no-prompt
+
+# Run tests in CI:
+$ circleci policy test ./policies --owner-id $ORG_ID || exit 1
+
+
+Flags:
+  -h, --help              help for test
+      --owner-id string   Organization ID

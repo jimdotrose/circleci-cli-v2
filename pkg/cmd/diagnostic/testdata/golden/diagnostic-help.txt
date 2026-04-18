@@ -1,0 +1,26 @@
+Verify the CircleCI CLI configuration and connectivity.
+
+Checks performed:
+  1. Configuration file — exists and is readable
+  2. Authentication    — an API token is configured
+  3. API connectivity  — the configured host responds and accepts the token
+
+Use this command to diagnose authentication or connectivity issues
+before filing a bug report or contacting support.
+
+Usage:
+  diagnostic [flags]
+
+Examples:
+# Run a full diagnostic:
+$ circleci diagnostic
+
+# Check connectivity to a CircleCI Server instance:
+$ circleci diagnostic --host https://circleci.mycompany.com
+
+# Use in CI to fail fast on misconfiguration:
+$ circleci diagnostic || exit 1
+
+
+Flags:
+  -h, --help   help for diagnostic

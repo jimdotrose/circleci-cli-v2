@@ -1,0 +1,32 @@
+List authentication tokens for a self-hosted runner resource class.
+
+Token values are not returned by the API — only metadata (ID,
+nickname, creation time) is shown. To create a new token, use
+'circleci runner token create'.
+
+
+JSON Fields:
+  id, resource_class, nickname, created_at, token
+
+Usage:
+  runner token list [flags]
+
+Examples:
+# List tokens for a resource class:
+$ circleci runner token list --resource-class myorg/my-runner
+
+# List as JSON:
+$ circleci runner token list --resource-class myorg/my-runner --json
+
+# Extract token IDs:
+$ circleci runner token list --resource-class myorg/my-runner \
+    --jq '.[].id'
+
+
+Flags:
+  -h, --help                    help for list
+      --jq expression           Filter JSON output with a jq expression
+  -j, --json                    Output as JSON
+      --plain                   Plain text output (tab-separated, no color)
+      --resource-class string   Resource class to list tokens for
+      --template template       Format output using a Go template

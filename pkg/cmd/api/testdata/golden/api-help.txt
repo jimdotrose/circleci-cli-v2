@@ -1,0 +1,40 @@
+Send an authenticated HTTP request to any CircleCI API endpoint and
+print the response as JSON.
+
+The endpoint must be a path starting with / (e.g. /me or /project/gh/myorg/myrepo).
+The base URL and authentication header are added automatically.
+
+Use --field to send request body fields (JSON encoded). Use --header to
+add custom HTTP headers. Use --paginate to follow next-page tokens and
+collect all results. Use --jq to filter the final JSON output.
+
+Usage:
+  api <endpoint> [flags]
+
+Examples:
+# Get the authenticated user:
+$ circleci api /me
+
+# List pipelines for a project:
+$ circleci api /project/gh/myorg/myrepo/pipeline --method GET
+
+# Create a context:
+$ circleci api /context --method POST \
+    --field name=my-context \
+    --field owner.id=$ORG_ID \
+    --field owner.type=organization
+
+# Paginate through all results:
+$ circleci api /project/gh/myorg/myrepo/pipeline --paginate
+
+# Filter with jq:
+$ circleci api /project/gh/myorg/myrepo/pipeline --jq '.items[].id'
+
+
+Flags:
+  -F, --field stringArray    Request body field in key=value form (repeatable)
+  -H, --header stringArray   Additional HTTP header in 'Name: value' form (repeatable)
+  -h, --help                 help for api
+      --jq string            Filter output with a jq expression
+  -X, --method string        HTTP method (default: GET, or POST when --field is used)
+      --paginate             Follow next_page_token and collect all pages

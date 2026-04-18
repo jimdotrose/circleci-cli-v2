@@ -1,0 +1,22 @@
+Delete a self-hosted runner authentication token.
+
+Any runner agent using this token will immediately lose the ability
+to claim jobs. Use --force to skip the confirmation prompt.
+
+Usage:
+  runner token delete <token-id> [flags]
+
+Examples:
+# Delete a token (prompts for confirmation):
+$ circleci runner token delete 00000000-0000-0000-0000-000000000000
+
+# Delete without prompting:
+$ circleci runner token delete <id> --force
+
+# Delete in a CI script:
+$ circleci runner token delete <id> --force --no-prompt
+
+
+Flags:
+  -f, --force   Skip confirmation prompt
+  -h, --help    help for delete

@@ -1,0 +1,39 @@
+Create a new scheduled pipeline trigger for a project.
+
+The timetable controls when the pipeline runs. It must be a JSON
+object with cron-compatible fields accepted by the CircleCI API.
+Use --parameters to pass pipeline parameters to each triggered run.
+
+JSON Fields (response):
+  id, name, description, projectSlug, createdAt, updatedAt,
+  timetable, actor.id, actor.login
+
+Usage:
+  trigger create <project-slug> [flags]
+
+Examples:
+# Create a nightly trigger:
+$ circleci trigger create myorg/myrepo \
+    --name "nightly" \
+    --timetable '{"per-hour":0,"hours-of-day":[0],"days-of-week":["MON","TUE","WED","THU","FRI"]}'
+
+# Create a trigger with pipeline parameters:
+$ circleci trigger create myorg/myrepo \
+    --name "weekly-deploy" \
+    --timetable '{"per-hour":0,"hours-of-day":[2],"days-of-week":["MON"]}' \
+    --parameters '{"deploy_env":"staging"}'
+
+# Create using a specific actor:
+$ circleci trigger create myorg/myrepo \
+    --name "daily" \
+    --timetable '{"per-hour":0,"hours-of-day":[6],"days-of-week":["MON","TUE","WED","THU","FRI"]}' \
+    --actor-id $ACTOR_ID
+
+
+Flags:
+      --actor-id string      Actor ID to attribute pipeline runs to
+      --description string   Description for the trigger
+  -h, --help                 help for create
+      --name string          Name for the scheduled trigger
+      --parameters string    Pipeline parameters as JSON object
+      --timetable string     Timetable as JSON object
