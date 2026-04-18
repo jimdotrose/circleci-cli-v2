@@ -37,6 +37,7 @@ func TestListHelp(t *testing.T)      { runHelp(t, []string{"list", "--help"}, "l
 func TestGetHelp(t *testing.T)       { runHelp(t, []string{"get", "--help"}, "get-help.txt") }
 func TestCancelHelp(t *testing.T)    { runHelp(t, []string{"cancel", "--help"}, "cancel-help.txt") }
 func TestArtifactsHelp(t *testing.T) { runHelp(t, []string{"artifacts", "--help"}, "artifacts-help.txt") }
+func TestLogsHelp(t *testing.T)      { runHelp(t, []string{"logs", "--help"}, "logs-help.txt") }
 
 func TestMain(m *testing.M) {
 	_ = os.MkdirAll(filepath.Join("testdata", "golden"), 0755)

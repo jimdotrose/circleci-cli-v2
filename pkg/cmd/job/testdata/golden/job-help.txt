@@ -14,6 +14,7 @@ Available Commands:
   get         Get details for a job
   help        Help about any command
   list        List jobs for a workflow
+  logs        Stream step output for a job
 
 Flags:
   -h, --help   help for job
