@@ -12,6 +12,7 @@ import (
 // NewCmdRerun returns the `circleci workflow rerun` command.
 func NewCmdRerun(f *cmdutil.Factory) *cobra.Command {
 	var fromFailed bool
+	var dryRun bool
 
 	cmd := &cobra.Command{
 		Use:   "rerun <workflow-id>",
@@ -21,6 +22,8 @@ func NewCmdRerun(f *cmdutil.Factory) *cobra.Command {
 
 			By default reruns all jobs. Use --failed to rerun only the jobs
 			that failed in the original run, saving credit and time.
+
+			Use --dry-run to preview which jobs would be rerun without triggering.
 		`),
 		Example: heredoc.Doc(`
 			# Rerun all jobs in a workflow:
@@ -29,12 +32,21 @@ func NewCmdRerun(f *cmdutil.Factory) *cobra.Command {
 			# Rerun only failed jobs:
 			$ circleci workflow rerun <id> --failed
 
-			# Rerun in a script:
-			$ circleci workflow rerun <id> --failed --no-prompt
+			# Preview what would be rerun without triggering:
+			$ circleci workflow rerun <id> --failed --dry-run
 		`),
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id := args[0]
+
+			if dryRun {
+				if fromFailed {
+					fmt.Fprintf(f.IOStreams.Out, "Would rerun failed jobs for workflow %s.\n", id)
+				} else {
+					fmt.Fprintf(f.IOStreams.Out, "Would rerun all jobs for workflow %s.\n", id)
+				}
+				return nil
+			}
 
 			client, err := f.APIClient()
 			if err != nil {
@@ -64,5 +76,6 @@ func NewCmdRerun(f *cmdutil.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().BoolVar(&fromFailed, "failed", false, "Rerun only failed jobs")
+	cmd.Flags().BoolVarP(&dryRun, "dry-run", "n", false, "Print what would be rerun without making API call")
 	return cmd
 }

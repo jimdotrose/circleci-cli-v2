@@ -4,6 +4,10 @@ Specify a branch or tag to trigger against. Optionally pass pipeline
 parameters as a JSON object. Parameters must match those declared in
 the 'parameters' section of your config.yml.
 
+Use --dry-run to preview the request without actually triggering.
+
+JSON Fields (response): id, state, number, createdAt
+
 
 JSON Fields:
   id, state, number, created_at
@@ -22,9 +26,13 @@ $ circleci pipeline trigger --project github/myorg/myrepo --branch main \
 # Trigger on a tag:
 $ circleci pipeline trigger --project github/myorg/myrepo --tag v1.2.3
 
+# Preview without triggering:
+$ circleci pipeline trigger --project github/myorg/myrepo --branch main --dry-run
+
 
 Flags:
       --branch string       Branch to trigger against
+  -n, --dry-run             Print what would be triggered without making API call
   -h, --help                help for trigger
       --jq expression       Filter JSON output with a jq expression
   -j, --json                Output as JSON

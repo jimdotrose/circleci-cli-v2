@@ -4,6 +4,10 @@ Contexts are scoped to an organization. Provide the organization's
 ID and type (organization or account). The created context can then
 be referenced in config.yml and have environment variables added.
 
+Use --dry-run to preview the creation without making an API call.
+
+JSON Fields: id, name, createdAt
+
 
 JSON Fields:
   id, name, created_at
@@ -18,15 +22,19 @@ $ circleci context create staging --org-id 00000000-0000-0000-0000-000000000000
 # Create and output as JSON:
 $ circleci context create production --org-id <id> --json
 
+# Preview creation without making an API call:
+$ circleci context create staging --org-id <id> --dry-run
+
 # Create for an account (user) context:
 $ circleci context create my-ctx --org-id <id> --org-type account
 
 
 Flags:
+  -n, --dry-run             Print what would be created without making API call
   -h, --help                help for create
       --jq expression       Filter JSON output with a jq expression
   -j, --json                Output as JSON
       --org-id string       Organization ID
-      --org-type string     Organization type (organization or account) (default "organization")
+      --org-type string     Organization type: organization or account (default: organization) (default "organization")
       --plain               Plain text output (tab-separated, no color)
       --template template   Format output using a Go template

@@ -18,6 +18,7 @@ func NewCmdTrigger(f *cmdutil.Factory) *cobra.Command {
 	var branch string
 	var tag string
 	var parameters string
+	var dryRun bool
 	var opts output.Options
 
 	cmd := &cobra.Command{
@@ -29,6 +30,10 @@ func NewCmdTrigger(f *cmdutil.Factory) *cobra.Command {
 			Specify a branch or tag to trigger against. Optionally pass pipeline
 			parameters as a JSON object. Parameters must match those declared in
 			the 'parameters' section of your config.yml.
+
+			Use --dry-run to preview the request without actually triggering.
+
+			JSON Fields (response): id, state, number, createdAt
 		`),
 		Example: heredoc.Doc(`
 			# Trigger a pipeline on main:
@@ -40,6 +45,9 @@ func NewCmdTrigger(f *cmdutil.Factory) *cobra.Command {
 
 			# Trigger on a tag:
 			$ circleci pipeline trigger --project github/myorg/myrepo --tag v1.2.3
+
+			# Preview without triggering:
+			$ circleci pipeline trigger --project github/myorg/myrepo --branch main --dry-run
 		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if project == "" {
@@ -67,6 +75,20 @@ func NewCmdTrigger(f *cmdutil.Factory) *cobra.Command {
 					fmt.Sprintf("Could not parse --parameters as JSON: %v", err),
 					cierrors.ExitBadArguments,
 				)
+			}
+
+			if dryRun {
+				ref := branch
+				if ref == "" {
+					ref = "tag:" + tag
+				}
+				fmt.Fprintf(f.IOStreams.Out, "Would trigger pipeline:\n")
+				fmt.Fprintf(f.IOStreams.Out, "  project:    %s\n", project)
+				fmt.Fprintf(f.IOStreams.Out, "  ref:        %s\n", ref)
+				if len(params) > 0 {
+					fmt.Fprintf(f.IOStreams.Out, "  parameters: %v\n", parameters)
+				}
+				return nil
 			}
 
 			client, err := f.APIClient()
@@ -100,6 +122,7 @@ func NewCmdTrigger(f *cmdutil.Factory) *cobra.Command {
 	cmd.Flags().StringVar(&branch, "branch", "", "Branch to trigger against")
 	cmd.Flags().StringVar(&tag, "tag", "", "Tag to trigger against")
 	cmd.Flags().StringVar(&parameters, "parameters", "", "Pipeline parameters as a JSON `object`")
+	cmd.Flags().BoolVarP(&dryRun, "dry-run", "n", false, "Print what would be triggered without making API call")
 	output.AddFlags(cmd, &opts, &apiclient.TriggerPipelineResponse{})
 	return cmd
 }

@@ -1,4 +1,7 @@
 version: 2
+# GoReleaser configuration for the CircleCI CLI.
+# Produces signed multi-platform binaries with Sigstore/cosign keyless signing
+# for SLSA provenance.
 
 project_name: circleci
 
@@ -19,16 +22,12 @@ builds:
     goarch:
       - amd64
       - arm64
-    goarm:
-      - "6"
-    ignore:
-      - goos: windows
-        goarch: arm64
-        goarm: "6"
+    # Windows arm64 is supported from Go 1.17; include it.
     ldflags:
       - -s -w
       - -X main.buildVersion={{.Version}}
       - -X main.buildDate={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
   - id: default
@@ -42,11 +41,89 @@ archives:
 
 checksum:
   name_template: "checksums.txt"
+  algorithm: sha256
+
+# ── Keyless Sigstore/cosign signing ─────────────────────────────────────────
+# Uses GitHub Actions OIDC token — no long-lived signing key required.
+# Provides SLSA Build L3 provenance for all release artifacts.
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+      - "--yes"
+    artifacts: checksum
+    output: true
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-dev+{{ .ShortCommit }}"
 
 changelog:
   sort: asc
+  use: github
   filters:
     exclude:
       - "^docs:"
       - "^test:"
       - "^chore:"
+      - "Merge pull request"
+      - "Merge remote-tracking branch"
+  groups:
+    - title: "New Features"
+      regexp: "^feat"
+      order: 0
+    - title: "Bug Fixes"
+      regexp: "^fix"
+      order: 1
+    - title: "Other Changes"
+      order: 999
+
+release:
+  github:
+    owner: CircleCI-Public
+    name: circleci-cli
+  draft: false
+  prerelease: auto
+  name_template: "v{{ .Version }}"
+  footer: |
+    ## Verifying the release
+
+    All release artifacts are signed with [Sigstore cosign](https://github.com/sigstore/cosign)
+    using keyless (OIDC-based) signing. No long-lived private key is used.
+
+    **Verify the checksum file signature:**
+    ```sh
+    cosign verify-blob \
+      --certificate-identity \
+        "https://github.com/CircleCI-Public/circleci-cli/.github/workflows/release.yml@refs/tags/{{ .Tag }}" \
+      --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+      --certificate "circleci_{{ .Version }}_checksums.txt.pem" \
+      --signature "circleci_{{ .Version }}_checksums.txt.sig" \
+      "circleci_{{ .Version }}_checksums.txt"
+    ```
+
+    **Verify a binary against the checksum:**
+    ```sh
+    sha256sum --check --ignore-missing circleci_{{ .Version }}_checksums.txt
+    ```
+
+# ── Homebrew tap (optional — requires homebrew-circleci tap repo) ─────────────
+brews:
+  - name: circleci
+    homepage: "https://circleci.com/docs/local-cli/"
+    description: "CircleCI command-line interface"
+    license: "MIT"
+    repository:
+      owner: CircleCI-Public
+      name: homebrew-circleci
+      branch: main
+    folder: Formula
+    install: |
+      bin.install "circleci"
+    test: |
+      system "#{bin}/circleci", "--version"

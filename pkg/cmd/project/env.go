@@ -150,6 +150,7 @@ func NewCmdEnvGet(f *cmdutil.Factory) *cobra.Command {
 // NewCmdEnvSet returns the `circleci project env set` command.
 func NewCmdEnvSet(f *cmdutil.Factory) *cobra.Command {
 	var value string
+	var dryRun bool
 
 	cmd := &cobra.Command{
 		Use:   "set <project-slug> <name>",
@@ -162,6 +163,8 @@ func NewCmdEnvSet(f *cmdutil.Factory) *cobra.Command {
 
 			Provide the value with --value. Pass --value - to read the value
 			from stdin, which avoids shell history exposure for sensitive values.
+
+			Use --dry-run to print what would be set without calling the API.
 		`),
 		Example: heredoc.Doc(`
 			# Set an environment variable:
@@ -170,8 +173,8 @@ func NewCmdEnvSet(f *cmdutil.Factory) *cobra.Command {
 			# Read value from stdin (avoids shell history exposure):
 			$ echo "$MY_SECRET" | circleci project env set github/myorg/myrepo MY_SECRET --value -
 
-			# Set from a shell variable:
-			$ circleci project env set github/myorg/myrepo DB_URL --value "$DB_URL"
+			# Preview without setting:
+			$ circleci project env set github/myorg/myrepo DB_URL --value "$DB_URL" --dry-run
 		`),
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -194,6 +197,11 @@ func NewCmdEnvSet(f *cmdutil.Factory) *cobra.Command {
 				value = string(buf[:n])
 			}
 
+			if dryRun {
+				fmt.Fprintf(f.IOStreams.Out, "Would set %s on project %s\n", name, slug)
+				return nil
+			}
+
 			client, err := f.APIClient()
 			if err != nil {
 				return err
@@ -214,6 +222,7 @@ func NewCmdEnvSet(f *cmdutil.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&value, "value", "", "Variable value (use - to read from stdin)")
+	cmd.Flags().BoolVarP(&dryRun, "dry-run", "n", false, "Print what would be set without making API call")
 	return cmd
 }
 

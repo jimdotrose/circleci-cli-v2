@@ -16,6 +16,7 @@ import (
 func NewCmdCreate(f *cmdutil.Factory) *cobra.Command {
 	var orgID string
 	var orgType string
+	var dryRun bool
 	var opts output.Options
 
 	cmd := &cobra.Command{
@@ -27,6 +28,10 @@ func NewCmdCreate(f *cmdutil.Factory) *cobra.Command {
 			Contexts are scoped to an organization. Provide the organization's
 			ID and type (organization or account). The created context can then
 			be referenced in config.yml and have environment variables added.
+
+			Use --dry-run to preview the creation without making an API call.
+
+			JSON Fields: id, name, createdAt
 		`),
 		Example: heredoc.Doc(`
 			# Create a context for an organization:
@@ -34,6 +39,9 @@ func NewCmdCreate(f *cmdutil.Factory) *cobra.Command {
 
 			# Create and output as JSON:
 			$ circleci context create production --org-id <id> --json
+
+			# Preview creation without making an API call:
+			$ circleci context create staging --org-id <id> --dry-run
 
 			# Create for an account (user) context:
 			$ circleci context create my-ctx --org-id <id> --org-type account
@@ -49,6 +57,14 @@ func NewCmdCreate(f *cmdutil.Factory) *cobra.Command {
 					"Provide the organization ID to create the context under.",
 					cierrors.ExitBadArguments,
 				)
+			}
+
+			if dryRun {
+				fmt.Fprintf(f.IOStreams.Out, "Would create context:\n")
+				fmt.Fprintf(f.IOStreams.Out, "  name:     %s\n", name)
+				fmt.Fprintf(f.IOStreams.Out, "  org-id:   %s\n", orgID)
+				fmt.Fprintf(f.IOStreams.Out, "  org-type: %s\n", orgType)
+				return nil
 			}
 
 			client, err := f.APIClient()
@@ -78,7 +94,8 @@ func NewCmdCreate(f *cmdutil.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&orgID, "org-id", "", "Organization ID")
-	cmd.Flags().StringVar(&orgType, "org-type", "organization", "Organization type (organization or account)")
+	cmd.Flags().StringVar(&orgType, "org-type", "organization", "Organization type: organization or account (default: organization)")
+	cmd.Flags().BoolVarP(&dryRun, "dry-run", "n", false, "Print what would be created without making API call")
 	output.AddFlags(cmd, &opts, &apiclient.Context{})
 	return cmd
 }

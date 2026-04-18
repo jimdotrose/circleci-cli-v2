@@ -30,11 +30,37 @@ import (
 // NewCmdRoot builds the root cobra.Command with all global flags, command
 // groups, help topics, and subcommands wired to the provided Factory.
 func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
+	// bindEnvToFlag sets a persistent flag from an env var only when the flag
+	// has not already been set explicitly on the command line. This gives:
+	//   CLI flag > env var > config file > built-in default
+	bindEnvToFlag := func(c *cobra.Command, flagName, envVar string) {
+		pf := c.Root().PersistentFlags()
+		if pf.Changed(flagName) {
+			return // explicit flag wins
+		}
+		if v := os.Getenv(envVar); v != "" {
+			_ = pf.Set(flagName, v)
+		}
+	}
+
 	// applyGlobalFlags reads persistent flag values and propagates them to
 	// IOStreams. Called from both PersistentPreRunE (normal execution) and the
 	// custom HelpFunc — Cobra short-circuits PersistentPreRunE when --help is
 	// passed, so the help path needs its own application.
 	applyGlobalFlags := func(c *cobra.Command) {
+		// Apply env var → flag bindings before reading flag values.
+		bindEnvToFlag(c, "token", "CIRCLECI_TOKEN")
+		if !c.Root().PersistentFlags().Changed("token") {
+			bindEnvToFlag(c, "token", "CIRCLECI_CLI_TOKEN")
+		}
+		bindEnvToFlag(c, "host", "CIRCLECI_HOST")
+		bindEnvToFlag(c, "debug", "CIRCLECI_DEBUG")
+		bindEnvToFlag(c, "no-color", "NO_COLOR")
+		bindEnvToFlag(c, "no-color", "CIRCLECI_NO_COLOR")
+		bindEnvToFlag(c, "no-prompt", "CI")
+		bindEnvToFlag(c, "no-prompt", "CIRCLECI_NO_INTERACTIVE")
+		bindEnvToFlag(c, "quiet", "CIRCLECI_QUIET")
+
 		if nc, err := c.Root().PersistentFlags().GetBool("no-color"); err == nil && nc {
 			f.IOStreams.SetColorEnabled(false)
 		}
