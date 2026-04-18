@@ -104,8 +104,8 @@ func NewCmdList(f *cmdutil.Factory) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&project, "project", "", "Project slug (e.g. github/myorg/myrepo)")
-	cmd.Flags().StringVar(&branch, "branch", "", "Filter by branch name")
-	cmd.Flags().IntVar(&limit, "limit", 20, "Maximum number of pipelines to return")
+	cmd.Flags().StringVarP(&branch, "branch", "b", "", "Filter by branch name")
+	cmd.Flags().IntVarP(&limit, "limit", "L", 20, "Maximum number of pipelines to return")
 	output.AddFlags(cmd, &opts, &apiclient.Pipeline{})
 	return cmd
 }

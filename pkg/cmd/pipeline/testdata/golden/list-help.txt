@@ -23,11 +23,11 @@ $ circleci pipeline list --project github/myorg/myrepo --jq '.[].id'
 
 
 Flags:
-      --branch string       Filter by branch name
+  -b, --branch string       Filter by branch name
   -h, --help                help for list
       --jq expression       Filter JSON output with a jq expression
   -j, --json                Output as JSON
-      --limit int           Maximum number of pipelines to return (default 20)
+  -L, --limit int           Maximum number of pipelines to return (default 20)
       --plain               Plain text output (tab-separated, no color)
       --project string      Project slug (e.g. github/myorg/myrepo)
       --template template   Format output using a Go template

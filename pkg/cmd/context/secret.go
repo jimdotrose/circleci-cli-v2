@@ -2,6 +2,8 @@ package context
 
 import (
 	"fmt"
+	"io"
+	"strings"
 
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
@@ -72,17 +74,11 @@ func NewCmdSecretSet(f *cmdutil.Factory) *cobra.Command {
 				}
 			} else {
 				// Non-interactive: read from stdin.
-				buf := make([]byte, 65536)
-				n, err := f.IOStreams.In.Read(buf)
-				if err != nil && n == 0 {
-					return cierrors.New(
-						"MISSING_VALUE",
-						"No value provided",
-						"Pipe the secret value to stdin in non-interactive mode.",
-						cierrors.ExitBadArguments,
-					)
+				data, err := io.ReadAll(f.IOStreams.In)
+				if err != nil {
+					return err
 				}
-				value = string(buf[:n])
+				value = strings.TrimRight(string(data), "\r\n")
 			}
 
 			if value == "" {
