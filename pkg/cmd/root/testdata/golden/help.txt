@@ -19,6 +19,7 @@ Core Commands:
   config         Manage CircleCI configuration files
   context        Manage CircleCI contexts
   job            Manage CircleCI jobs
+  open           Open the CircleCI dashboard for a project in the browser
   orb            Manage and explore CircleCI orbs
   pipeline       Manage CircleCI pipelines
   project        Manage CircleCI projects

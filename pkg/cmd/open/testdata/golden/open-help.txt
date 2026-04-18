@@ -1,0 +1,35 @@
+Open the CircleCI pipelines dashboard for a project in the default
+web browser.
+
+If --project is omitted, the project slug is inferred from the
+'origin' git remote of the current directory. Supported remotes:
+  github.com    → github/<org>/<repo>
+  bitbucket.org → bitbucket/<org>/<repo>
+
+The URL opened is:
+  https://app.circleci.com/pipelines/<project-slug>
+
+The URL is always printed to stdout so you can copy it or use it
+in scripts even when running non-interactively.
+
+Usage:
+  open [flags]
+
+Examples:
+# Open dashboard, inferring project from git remote:
+$ circleci open
+
+# Open dashboard for an explicit project:
+$ circleci open --project github/myorg/myrepo
+
+# Print the URL without opening a browser:
+$ circleci open --project github/myorg/myrepo --no-browser
+
+# Open a Bitbucket-hosted project:
+$ circleci open --project bitbucket/myorg/myrepo
+
+
+Flags:
+  -h, --help             help for open
+      --no-browser       Print the URL but do not open a browser
+      --project string   Project slug (e.g. github/myorg/myrepo); inferred from git remote if omitted

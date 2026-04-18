@@ -11,6 +11,7 @@ import (
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/auth"
 	cmdorb "github.com/CircleCI-Public/circleci-cli/pkg/cmd/orb"
 	cmdconfig "github.com/CircleCI-Public/circleci-cli/pkg/cmd/config"
+	cmdopen "github.com/CircleCI-Public/circleci-cli/pkg/cmd/open"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/context"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/diagnostic"
 	"github.com/CircleCI-Public/circleci-cli/pkg/cmd/job"
@@ -196,6 +197,10 @@ func NewCmdRoot(f *cmdutil.Factory, buildVersion string) *cobra.Command {
 	triggerCmd := cmdtrigger.NewCmdTrigger(f)
 	triggerCmd.GroupID = "core"
 	cmd.AddCommand(triggerCmd)
+
+	openCmd := cmdopen.NewCmdOpen(f, nil)
+	openCmd.GroupID = "core"
+	cmd.AddCommand(openCmd)
 
 	namespaceCmd := cmdnamespace.NewCmdNamespace(f)
 	namespaceCmd.GroupID = "developer"
